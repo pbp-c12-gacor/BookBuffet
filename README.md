@@ -40,6 +40,8 @@ Mengingat perkembangan teknologi yang sangat pesat saat ini sehingga terjadi per
 
 Dilengkapi dengan fitur Recommendation, BookBuffet hadir untuk memberikan informasi terkait buku-buku yang cocok dengan minat Anda. Fitur ini juga didasarkan oleh ulasan-ulasan pengguna lainnya. Tidak hanya itu, BookBuffet juga hadir dengan fitur My Books, di mana Anda dapat menyimpan judul buku-buku yang telah Anda baca dan Anda juga dapat memberikan ulasan terhadap buku tersebut. BookBuffet juga menyediakan sebuah forum diskusi di mana Anda dapat berdiskusi tentang buku sepuasnya. Selain itu, Anda juga dapat menambahkan buku Anda ke katalog yang kami miliki. Anda juga tidak perlu khawatir jika mendapati suatu kendala ketika menggunakan BookBuffet ini. Terdapat fitur Report Book yang siap membantu Anda dalam menyelesaikan masalah. Kami harap dengan adanya situs web BookBuffet ini dapat membantu Anda dalam memilih buku yang akan Anda baca.
 
+
+
 ## 📂 Daftar Modul 📂
 Berikut ini beberapa modul yang digunakan pada web BookBuffet:
 
