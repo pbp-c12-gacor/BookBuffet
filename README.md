@@ -61,8 +61,6 @@ Pengguna _role_ `User` memiliki opsi untuk me-_report_ buku agar dapat di-_remov
 ## 🗺️ Sumber Dataset Katalog Buku 🗺️
 Dataset yang digunakan pada aplikasi BookBuffet ini diambil dari [Google Books API](https://developers.google.com/books/docs/v1/using). Dataset ini berisi informasi mengenai buku-buku yang ada di Google Books. Dataset ini berisi informasi mengenai judul buku, penulis, tanggal publikasi, _rating_, dan deskripsi buku. Dataset ini juga berisi _cover_ buku yang dapat digunakan sebagai _thumbnail_ pada aplikasi BookBuffet.
 
-## Test Push
-
 ## 🎭 Role Pengguna 🎭
 | Peran   | Hak Akses                                                                                              |
 |---------|--------------------------------------------------------------------------------------------------------|
