@@ -15,7 +15,6 @@ urlpatterns = [
     path('logout/', logout_user, name='logout'),
     path('create-post/', create_post, name='create_post'),
     path('get-post/', get_post, name='get_post'),
-    # path('get-/', get_post, name='get_post'),
     path('get-post/<int:post_id>/', get_post_by_id, name='get_post_by_id'),
     path('get-user/<int:user_id>/', get_user_by_id, name='get_user_by_id'),
     path('get-comments/', get_comment, name='get_comment'),
