@@ -91,6 +91,23 @@ def create_post(request):
 
     return HttpResponseNotFound()
 
+@csrf_exempt
+def edit_post(request,post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == 'POST':
+        title = request.POST.get('title-edit')
+        text = request.POST.get('description-edit')
+        image = request.FILES.get('image-edit')
+        post.title = title
+        post.text = text
+        if image is not None:
+            post.image = image
+        post.save()
+
+        return HttpResponse(b"UPDATED", status=201)
+
+    return HttpResponseNotFound()
+
 def get_post(request):
     if request.method == 'GET':
         posts = Post.objects.all()
