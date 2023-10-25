@@ -12,15 +12,15 @@ class Book(models.Model):
     title = models.CharField(max_length=255)
     subtitle = models.TextField(null=True, blank=True)
     authors = models.ManyToManyField("Author", related_name="books_authored")
-    publisher = models.CharField(max_length=255)
-    published_date = models.DateField()
+    publisher = models.CharField(max_length=255, null=True, blank=True)
+    published_date = models.DateField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    page_count = models.IntegerField()
+    page_count = models.IntegerField(null=True, blank=True)
     categories = models.ManyToManyField("Category", related_name="books_in_category")
-    language = models.CharField(max_length=255)
-    preview_link = models.URLField()
+    language = models.CharField(max_length=10, null=True, blank=True)
+    preview_link = models.URLField(null=True, blank=True)
     cover = models.ImageField(upload_to="covers", null=True, blank=True)
-    industry_identifiers = models.JSONField()
+    industry_identifiers = models.JSONField(null=True, blank=True)
 
 
 class Author(models.Model):
