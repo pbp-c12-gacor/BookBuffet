@@ -19,7 +19,7 @@ class Book(models.Model):
     categories = models.ManyToManyField("Category", related_name="books_in_category")
     language = models.CharField(max_length=255)
     preview_link = models.URLField()
-    cover_link = models.URLField(null=True, blank=True)
+    cover = models.ImageField(upload_to="covers", null=True, blank=True)
     industry_identifiers = models.JSONField()
 
 
