@@ -111,7 +111,7 @@
   refreshPosts();
 
   function addPost() {
-    fetch("{% url 'main:create_post' %}", {
+    fetch("{% url 'forum:create_post' %}", {
       method: "POST",
       body: new FormData(document.querySelector("#form-post")),
     }).then(refreshPosts);
