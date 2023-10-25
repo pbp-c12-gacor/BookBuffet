@@ -1,10 +1,10 @@
 {% extends 'base.html' %} {% block content %}
-<div class="container d-flex flex-row">
+<div class="container d-flex flex-row" >
   <header>{% include 'sidebar.html'%}</header>
   <main class="container">
     <div class="w-75">
       <div class="d-flex text-start my-3">
-        <a href="/" class="text-decoration-none">
+        <a href="/forum/" class="text-decoration-none">
           <i
             style="-webkit-text-stroke: 1px"
             class="bi bi-arrow-left fw-bold text-dark fs-4"
@@ -19,13 +19,13 @@
 <!-- Your scripts here -->
 <script>
   async function getCommentsById(post_id) {
-    return fetch(`/get-comment/${post_id}`).then((res) => res.json());
+    return fetch(`/forum/get-comment/${post_id}/`).then((res) => res.json());
   }
   async function getUserById(user_id) {
-    return fetch(`/get-user/${user_id}`).then((res) => res.json());
+    return fetch(`/forum/get-user/${user_id}/`).then((res) => res.json());
   }
   async function getPostById(post_id) {
-    return fetch(`/get-post/${post_id}`).then((res) => res.json());
+    return fetch(`/forum/get-post/${post_id}/`).then((res) => res.json());
   }
   function calculateTime(now, dateAdded) {
     let diffInMilliseconds = now - dateAdded;
@@ -55,7 +55,6 @@
     let user = await getUserById(post[0].fields.user);
     let dateAdded = new Date(post[0].fields.date_added); // asumsikan ini adalah tanggal saat post ditambahkan
     let now = new Date(); // waktu saat ini
-    console.log(dateAdded);
 
     let timeDifference = calculateTime(now, dateAdded);
     let htmlString = `
@@ -64,7 +63,7 @@
                           <div class="d-flex justify-content-between">
                                 <h4 class="text-dark fw-bold">${user[0].fields.username} <span class="fw-normal fs-6" style="color: gray"> · ${timeDifference}</span></h4>`;
     if (post[0].fields.user == user_id) {
-      htmlString += `<button type="submit" onclick="deletePost(${post.pk}); return false;" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Delete Post</button>`;
+      htmlString += `<button type="submit" onclick="deletePost(${post[0].pk}); return false;" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Delete Post</button>`;
     }
     htmlString += `</div>
                             <h5 class="card-title">${post[0].fields.title}</h5>
@@ -120,7 +119,7 @@
     return false;
   }
   function addComment(post_id) {
-    fetch(`create-comment/${post_id}/`, {
+    fetch(`/forum/create-comment/${post_id}/`, {
       method: "POST",
       body: new FormData(document.querySelector("#form-comment")),
     }).then(refreshPosts);
@@ -130,15 +129,16 @@
   }
 
   function deletePost(post_id) {
-    fetch(`delete-post/${post_id}`, {
+    fetch(`/forum/delete-post/${post_id}/`, {
       method: "DELETE",
-    }).then(refreshPosts);
+    })
+      .then(() => (window.location.href = "/forum"))
+      .then(refreshPosts);
     return false;
   }
 
   function deleteComment(comment) {
-    console.log("deleteComment");
-    fetch(`delete-comment/${comment}`, {
+    fetch(`delete-comment/${comment}/`, {
       method: "DELETE",
     }).then(refreshPosts);
     return false;

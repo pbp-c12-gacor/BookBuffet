@@ -1,37 +1,68 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<div class="container">
-  <div class="row" style="width: fit-content">
-    <div class="col-sm">
-      <h3 class="mb-3 text-primary">{{username}}</h3>
-      <a href="/">Home</a>
-      <a href="mypost/">My Post</a>
-    </div>
-    <div class="col-md-auto">
-      <form id="form-post" method="POST" enctype="multipart/form-data">
+{% extends 'base.html' %} {% block content %}
+<div class="container d-flex flex-row" >
+  <header>{% include 'sidebar.html'%}</header>
+  <main class="container">
+    <div class="w-75">
+      <h1 class="fw-bold">Home</h1>
+      <hr />
+      <form
+        class="p-1"
+        id="form-post"
+        method="POST"
+        enctype="multipart/form-data"
+      >
         {% csrf_token %}
-        <h1>Home</h1>
-        <label for="title" class="form-label">Title</label>
-        <input type="text" class="form-control" id="title" name="title" />
-        <label for="content" class="form-label">Content</label>
-        <textarea
-          class="form-control"
-          id="content"
-          name="content"
-          rows="3"
-        ></textarea>
-        <label for="image" class="form-label">Image</label>
-        <input type="file" class="form-control" id="image" name="image" />
-        <button id="button_add" class="btn btn-primary mt-2">Submit</button>
+        <input
+          type="text"
+          class="form-control border-0 my-2"
+          id="title"
+          name="title"
+          placeholder="Type Your Title Here"
+        />
+        <div class="position-relative">
+          <textarea
+            class="form-control border-0 my-2"
+            id="content"
+            name="content"
+            rows="3"
+            placeholder="What's Happening?"
+            style="height: 150px"
+          ></textarea>
+          <div class="position-absolute bottom-0 start-0 p-2 ps-3">
+            <label for="image">
+              <i
+                class="bi-card-image fs-4"
+                id="upload-button"
+                style="cursor: pointer; color: gray"
+              ></i>
+            </label>
+            <input
+              type="file"
+              class="custom-file-input d-none"
+              id="image"
+              name="image"
+              aria-describedby="inputGroupFileAddon01"
+            />
+          </div>
+          <div class="position-absolute end-0 bottom-0 p-2">
+            <div class="d-flex justify-content-end">
+              <button
+                id="button_add"
+                class="mt-2 btn btn-primary rounded fw-bold"
+              >
+                Post
+              </button>
+            </div>
+          </div>
+        </div>
       </form>
+      <hr />
       <div id="posts"></div>
-      <a href="{% url 'forum:logout' %}" class="btn btn-secondary"
+      <a href="{% url 'main:logout' %}" class="btn btn-secondary"
         ><i class="bi bi-box-arrow-right"></i> Logout</a
       >
     </div>
-    <div class="col-sm-5"></div>
-  </div>
+  </main>
 </div>
 
 <!-- Your scripts here -->
@@ -39,39 +70,61 @@
   async function getPosts() {
     return fetch("{% url 'forum:get_post' %}").then((res) => res.json());
   }
-  async function getCommentsById(post_id) {
-    return fetch(`get-comment/${post_id}`).then((res) => res.json());
+  async function getCommentsByPostId(post_id) {
+    return fetch(`get-comment/${post_id}/`).then((res) => res.json());
   }
   async function getUserById(user_id) {
-    return fetch(`get-user/${user_id}`).then((res) => res.json());
+    return fetch(`get-user/${user_id}/`).then((res) => res.json());
   }
   async function refreshPosts() {
     const posts = await getPosts();
     const user_id = "{{ user_id }}";
     posts.sort(
-      (a, b) =>
-        new Date(b.fields.date_added) - new Date(a.fields.date_added)
+      (a, b) => new Date(b.fields.date_added) - new Date(a.fields.date_added)
     );
     const htmlStrings = [];
     for (const post of posts) {
+      let comments = await getCommentsByPostId(post.pk);
+      let numComments = comments.length;
       let user = await getUserById(post.fields.user);
+      let dateAdded = new Date(post.fields.date_added); // asumsikan ini adalah tanggal saat post ditambahkan
+      let now = new Date(); // waktu saat ini
+
+      let diffInMilliseconds = now - dateAdded;
+      let diffInSeconds = diffInMilliseconds / 1000;
+      let diffInMinutes = diffInSeconds / 60;
+      let diffInHours = diffInMinutes / 60;
+      let diffInDays = diffInHours / 24;
+
+      let timeDifference;
+      if (diffInSeconds < 60) {
+        timeDifference = Math.round(diffInSeconds) + " s";
+      } else if (diffInMinutes < 60) {
+        timeDifference = Math.round(diffInMinutes) + " m";
+      } else if (diffInHours < 24) {
+        timeDifference = Math.round(diffInHours) + " h";
+      } else {
+        timeDifference = Math.round(diffInDays) + " d";
+      }
       let htmlString = `
-                    <div class="card mb-3 shadow-sm bg-light border-primary">
+                  <a class="block card mb-3 shadow bg-light text-decoration-none" href = "post/${post.pk}"
+                    <article class="card mb-3 shadow bg-light">
                         <div class="card-body">
-                            <h5 class="card-title text-primary">${post.fields.title}</h5>`;
-      if (post.fields.image) {
-        htmlString += `<img src="media/${post.fields.image}" class="card-img-top w-50 h-50 img-fluid img-thumbnail" alt="${post.fields.title}">`;
-      }
-      htmlString += `<h6 class="card-subtitle mb-2 text-muted">Posted by ${user[0].fields.username} on ${post.fields.date_added}</h6>
-                            <p class="card-text">${post.fields.text}</p>`;
+                          <div class="d-flex justify-content-between">
+                                <h4 class="text-dark fw-bold">${user[0].fields.username} <span class="fw-normal fs-6" style="color: gray"> · ${timeDifference}</span></h4>`;
       if (post.fields.user == user_id) {
-        htmlString += `
-                    <button type="submit" onclick="deletePost(${post.pk}); return false;" class="btn btn-danger mt-3"><i class="bi bi-trash-fill"></i> Delete Post</button>`;
+        htmlString += `<button type="submit" onclick="deletePost(${post.pk}); return false;" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Delete Post</button>`;
       }
-      htmlString += `
-                <a href = "post/${post.pk}">See Post</a>
+      htmlString += `</div>
+                            <h5 class="card-title">${post.fields.title}</h5>
+                            <p class="card-text">${post.fields.text}</p>`;
+      if (post.fields.image) {
+        htmlString += `<img src="media/${post.fields.image}" class="w-50 h-50 rounded img-fluid" alt="${post.fields.title}">`;
+      }
+      htmlString += `<div class="mt-1 fw-normal fs-6" style="color: gray"> <i style="color:grey" class="bi bi-chat"></i> ${numComments}</div>
                     </div>
-                    </div>`;
+                    </article>
+                    </a>`;
       htmlStrings.push(htmlString);
     }
 
@@ -80,6 +133,7 @@
   refreshPosts();
 
   function addPost() {
+    console.log("addPost");
     fetch("{% url 'forum:create_post' %}", {
       method: "POST",
       body: new FormData(document.querySelector("#form-post")),
@@ -88,31 +142,26 @@
     document.getElementById("form-post").reset();
     return false;
   }
-  function addComment(post_id) {
-    console.log("adding comment");
-    fetch(`create-comment/${post_id}/`, {
-      method: "POST",
-      body: new FormData(document.querySelector("#form-comment")),
-    }).then(refreshPosts);
-
-    document.getElementById("form-comment").reset();
-    return false;
-  }
 
   function deletePost(post_id) {
-    fetch(`delete-post/${post_id}`, {
+    fetch(`delete-post/${post_id}/`, {
       method: "DELETE",
     }).then(refreshPosts);
     return false;
   }
 
-  function deleteComment(comment) {
-    console.log("deleteComment");
-    fetch(`delete-comment/${comment}`, {
-      method: "DELETE",
-    }).then(refreshPosts);
-    return false;
-  }
   document.getElementById("button_add").onclick = addPost;
+
+  document.querySelector("#image").addEventListener("change", function (e) {
+    var fileName = document.getElementById("image").files[0].name;
+    var nextSibling = e.target.nextElementSibling;
+    nextSibling.innerText = fileName;
+  });
+
+  document.querySelector("#image").addEventListener("change", function (e) {
+    var fileName = e.target.files[0].name;
+    var nextSibling = e.target.nextElementSibling;
+    nextSibling.innerText = fileName;
+  });
 </script>
 {% endblock content %}
