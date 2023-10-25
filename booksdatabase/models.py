@@ -20,7 +20,8 @@ class Book(models.Model):
     language = models.CharField(max_length=10, null=True, blank=True)
     preview_link = models.URLField(null=True, blank=True)
     cover = models.ImageField(upload_to="covers", null=True, blank=True)
-    industry_identifiers = models.JSONField(null=True, blank=True)
+    isbn_10 = models.CharField(max_length=10, null=True, blank=True)
+    isbn_13 = models.CharField(max_length=13, null=True, blank=True)
 
 
 class Author(models.Model):
@@ -28,7 +29,6 @@ class Author(models.Model):
     A model representing an author.
     """
     name = models.CharField(max_length=255)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="authors_books")
 
     def __str__(self):
         return str(self.name)
@@ -39,7 +39,6 @@ class Category(models.Model):
     A model representing a category.
     """
     name = models.CharField(max_length=255)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="categories_books")
 
     def __str__(self):
         return str(self.name)
