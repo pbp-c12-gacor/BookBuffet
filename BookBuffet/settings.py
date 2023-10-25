@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "main",
     "forum",
     "report",
+    "booksdatabase",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
