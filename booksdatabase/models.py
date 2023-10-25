@@ -30,6 +30,9 @@ class Author(models.Model):
     name = models.CharField(max_length=255)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="authors_books")
 
+    def __str__(self):
+        return str(self.name)
+
 
 class Category(models.Model):
     """
@@ -37,3 +40,6 @@ class Category(models.Model):
     """
     name = models.CharField(max_length=255)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="categories_books")
+
+    def __str__(self):
+        return str(self.name)
