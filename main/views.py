@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.contrib.auth import authenticate, login
+
 
 # Create your views here.
 def show_main(request):
@@ -6,3 +8,4 @@ def show_main(request):
     }
 
     return render(request, "main.html", context)
+
