@@ -120,7 +120,7 @@
     return false;
   }
   function addComment(post_id) {
-    fetch(`/create-comment/${post_id}/`, {
+    fetch(`create-comment/${post_id}/`, {
       method: "POST",
       body: new FormData(document.querySelector("#form-comment")),
     }).then(refreshPosts);
@@ -130,7 +130,7 @@
   }
 
   function deletePost(post_id) {
-    fetch(`/delete-post/${post_id}`, {
+    fetch(`delete-post/${post_id}`, {
       method: "DELETE",
     }).then(refreshPosts);
     return false;
@@ -138,7 +138,7 @@
 
   function deleteComment(comment) {
     console.log("deleteComment");
-    fetch(`/delete-comment/${comment}`, {
+    fetch(`delete-comment/${comment}`, {
       method: "DELETE",
     }).then(refreshPosts);
     return false;
