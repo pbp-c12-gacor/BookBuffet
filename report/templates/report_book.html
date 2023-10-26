@@ -1,1 +1,43 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Report</title>
+    <!-- jQuery UI untuk fitur autocomplete -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+
+    <h1>Create a New Report</h1>
+    
+    <!-- Render Form -->
+    <form method="post" action="{% url 'create_report' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- fitur autocomplete -->
+    <script>
+        $(document).ready(function() {
+            $("#book_title").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{% url 'get_book_suggestions' %}",
+                        dataType: "json",
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,
+            });
+        });
+    </script>
+
+</body>
+</html>
