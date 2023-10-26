@@ -3,19 +3,24 @@
   <main class="container">
     <div class="w-75">
       <h1 class="fw-bold">My Post</h1>
-      <div class="d-flex">
+      <div class="d-flex align-items-center">
         <div class="dropdown mb-2 me-2">
           <button
             class="btn btn-primary dropdown-toggle rounded"
             type="button"
             data-bs-toggle="dropdown"
             data-bs-display="static"
+            style="min-height: 50px"
           >
             Categories <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu p-1" id="categories-list">
+          <ul
+            class="dropdown-menu p-1 rounded shadow-sm"
+            id="categories-list"
+            style="max-height: 150px; overflow-y: auto"
+          >
             <input
-              class="form-control"
+              class="form-control mb-0"
               id="myInput"
               type="text"
               placeholder="Search.."
@@ -23,7 +28,7 @@
             />
           </ul>
         </div>
-        <div id="category-selected"></div>
+        <div id="category-selected" style="min-height: 50px"></div>
       </div>
       <div id="posts"></div>
     </div>
@@ -109,7 +114,9 @@
     const categories = await getCategories();
     const htmlStrings = [];
     for (const categori of categories) {
-      const htmlString = `<li><a style="cursor:pointer" onclick="changeUrlAndRefreshPosts('${categori.name}')">${categori.name}</a></li>`;
+      const htmlString = `<hr class="m-0"/>
+        <li class="px-2 pt-1"><h4 style="cursor:pointer" onclick="changeUrlAndRefreshPosts('${categori.name}')">${categori.name}</h4></li>
+        `;
       htmlStrings.push(htmlString);
     }
     document.getElementById("categories-list").innerHTML +=
@@ -129,17 +136,10 @@
   }
 
   function changeUrlAndRefreshPosts(name) {
-    // Membuat objek URLSearchParams baru
     let params = new URLSearchParams();
-
-    // Menambahkan parameter ke objek
     params.append("category", name);
-
-    // Mengubah URL tanpa memuat ulang halaman
-    history.pushState(null, "", `?${params.toString()}`);
-
+    history.pushState(null, "", `/?${params.toString()}`);
     addCategoryToPage(name);
-
     refreshPosts();
   }
 
@@ -147,17 +147,17 @@
     document.getElementById(
       "category-selected"
     ).innerHTML = `<div class="card px-1">
-          <div class="card-body d-flex p-1">
-            <p class="mb-0 fs-6 fw-bold ">${name}</p>   
-            <a id="cancel-select" class="mb-1" style="color:gray; -webkit-text-stroke: 1px; cursor:pointer"><i class="bi bi-x"></i></a>    
+            <div class="card-body d-flex p-1 style="max-height: 50px">
+              <p class="mb-0 fs-6 fw-bold ">${name}</p>
+              <a id="cancel-select" class="mb-1" style="color:gray; -webkit-text-stroke: 1px; cursor:pointer"><i class="bi bi-x"></i></a>
+            </div>
           </div>
-        </div>
-`;
+  `;
     document
       .getElementById("cancel-select")
       .addEventListener("click", function () {
         document.getElementById("category-selected").innerHTML = "";
-        history.pushState(null, "", "/forum");
+        history.pushState(null, "", "/forum/mypost/");
         localStorage.removeItem("selectedCategory");
         refreshPosts();
       });
@@ -183,7 +183,6 @@
         return acc;
       }, Promise.resolve([]));
     }
-
     posts = posts.filter((post) => {
       return Number(post.fields.user) === Number(user_id);
     });
@@ -194,6 +193,8 @@
     for (const post of posts) {
       let comments = await getCommentsByPostId(post.pk);
       let numComments = comments.length;
+      console.log(post.fields.book);
+      const book = await getBookById(post.fields.book);
       let user = await getUserById(post.fields.user);
       let dateAdded = new Date(post.fields.date_added); // asumsikan ini adalah tanggal saat post ditambahkan
       let now = new Date(); // waktu saat ini
@@ -215,82 +216,92 @@
         timeDifference = Math.round(diffInDays) + " d";
       }
       let htmlString = `
-        <article class="card mb-3 shadow bg-light" style="cursor:pointer" onclick="window.location.href='/forum/post/${post.pk}'">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <h4 class="text-dark fw-bold">${user[0].fields.username} <span class="fw-normal fs-6" style="color: gray"> · ${timeDifference}</span></h4>
-                    <div class="btn-group">
-          <button class="btn btn-sm border-0 top-0" style="width:auto; height:auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.stopPropagation();"">
-            <i class="bi bi-three-dots"></i>
-          </button>
-          <ul class="dropdown-menu rounded p-0 my-0" style="width:auto">
-            <li class="px-0 mx-0 fs-6">
-              <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#deleteModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-trash-fill text-dark"></i> Delete</button>  
-            </li>
-            <li class="p-0 m-0 fs-6">
-              <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#editModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-pencil-fill text-dark"></i> Edit</button>    
-            </li>
-          </ul>
-        </div>      
-                    `;
+          <article class="card mb-3 shadow bg-light" style="cursor:pointer" onclick="window.location.href='/forum/post/${post.pk}'">
+              <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                      <h4 class="text-dark fw-bold">${user[0].fields.username} <span class="fw-normal fs-6" style="color: gray"> · ${timeDifference}</span></h4>
+                      <div class="btn-group">
+            <button class="btn btn-sm border-0 top-0" style="width:auto; height:auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.stopPropagation();"">
+              <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu rounded p-0 my-0" style="width:auto">
+              <li class="px-0 mx-0 fs-6">
+                <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#deleteModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-trash-fill text-dark"></i> Delete</button>
+              </li>
+              <li class="p-0 m-0 fs-6">
+                <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#editModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-pencil-fill text-dark"></i> Edit</button>
+              </li>
+            </ul>
+          </div>
+                      `;
       htmlString += `</div>
-                <h5 class="card-title">${post.fields.title}</h5>
-                <p class="card-text">${post.fields.text}</p>`;
+                  <h2 class="card-title m-0">${post.fields.title}</h2>
+                  <h4 class="card-text">${post.fields.text}</h4>`;
+
+      if (post.fields.book) {
+        htmlString += `<div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">${book.title}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">${book.authors[0].name}</h6>
+                    </div>
+                  </div>
+                  `;
+      }
       if (post.fields.image) {
         htmlString += `<img src="media/${post.fields.image}" class="w-50 h-50 rounded img-fluid" alt="${post.fields.title}">`;
       }
       htmlString += `<div class="mt-1 fw-normal fs-6" style="color: gray"> <i style="color:grey" class="bi bi-chat"></i> ${numComments}</div>
-            </div>
-        </article>
-        <div class="modal fade" id="deleteModal${post.pk}" tabindex="-1" aria-labelledby="deleteModalLabel${post.pk}" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel${post.pk}">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <div class="modal-body">
-                Apakah Anda yakin ingin menghapus post ini?
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-danger" onclick="deletePost(${post.pk}); return false;" data-bs-dismiss="">Hapus</button>
+          </article>
+          <div class="modal fade" id="deleteModal${post.pk}" tabindex="-1" aria-labelledby="deleteModalLabel${post.pk}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModalLabel${post.pk}">Modal title</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Apakah Anda yakin ingin menghapus post ini?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                  <button type="button" class="btn btn-danger" onclick="deletePost(${post.pk}); return false;" data-bs-dismiss="">Hapus</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="modal fade" id="editModal${post.pk}" tabindex="-1" aria-labelledby="editModalLabel${post.pk}" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="deleteModalLabel${post.pk}">Edit Post</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="form-post-edit" onsubmit="return false;" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="title-edit" class="col-form-label">Title:</label>
-                                <input type="text" class="form-control" id="title-edit" name="title-edit" value="${post.fields.title}"></input>
-                            </div>
-                            <div class="mb-3">
-                                <label for="description-edit" class="col-form-label">Description:</label>
-                                <textarea class="form-control" id="description-edit" name="description-edit">${post.fields.text}</textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="image-edit" class="col-form-label">Image:</label><br>
-                                <input type="file" class="custom-file-input" id="image-edit" name="image-edit" aria-describedby="inputGroupFileAddon01"/>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal" onclick="editPost(${post.pk}); return false;">Edit Post</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
+          <div class="modal fade" id="editModal${post.pk}" tabindex="-1" aria-labelledby="editModalLabel${post.pk}" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="deleteModalLabel${post.pk}">Edit Post</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <form id="form-post-edit" onsubmit="return false;" method="POST" enctype="multipart/form-data">
+                              {% csrf_token %}
+                              <div class="mb-3">
+                                  <label for="title-edit" class="col-form-label">Title:</label>
+                                  <input type="text" class="form-control" id="title-edit" name="title-edit" value="${post.fields.title}"></input>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="description-edit" class="col-form-label">Description:</label>
+                                  <textarea class="form-control" id="description-edit" name="description-edit">${post.fields.text}</textarea>
+                              </div>
+                              <div class="mb-3">
+                                  <label for="image-edit" class="col-form-label">Image:</label><br>
+                                  <input type="file" class="custom-file-input" id="image-edit" name="image-edit" aria-describedby="inputGroupFileAddon01"/>
+                              </div>
+                          </form>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal" onclick="editPost(${post.pk}); return false;">Edit Post</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      `;
       htmlStrings.push(htmlString);
     }
 
@@ -311,12 +322,12 @@
       document.getElementById(
         "upload-status-book"
       ).innerHTML = `<div class="card p-1">
-          <div class="card-body d-flex p-1">
-            <p class="mb-0">Book: ${book.title}</p>   
-            <a id="cancel-upload-book" class="mb-1" style="color:gray; -webkit-text-stroke: 1px; cursor:pointer"><i class="bi bi-x"></i></a>    
+            <div class="card-body d-flex p-1">
+              <p class="mb-0">Book: ${book.title}</p>
+              <a id="cancel-upload-book" class="mb-1" style="color:gray; -webkit-text-stroke: 1px; cursor:pointer"><i class="bi bi-x"></i></a>
+            </div>
           </div>
-        </div>
-`;
+  `;
 
       document
         .querySelector("#cancel-upload-book")
@@ -378,11 +389,11 @@
       document.getElementById(
         "upload-image"
       ).innerHTML = `<div class="card mx-2 p-1">
-          <div class="card-body d-flex p-1">
-            <p class="fs-6 mb-0">File: ${file.name}</p>
-            <a id="cancel-upload-image" class="" style="color:gray; -webkit-text-stroke: 1px; cursor:pointer"><i class="bi bi-x"></i></a>    
-          </div>
-        </div>`;
+            <div class="card-body d-flex p-1">
+              <p class="fs-6 mb-0">File: ${file.name}</p>
+              <a id="cancel-upload-image" class="" style="color:gray; -webkit-text-stroke: 1px; cursor:pointer"><i class="bi bi-x"></i></a>
+            </div>
+          </div>`;
       reader.readAsDataURL(file);
       document
         .getElementById("cancel-upload-image")

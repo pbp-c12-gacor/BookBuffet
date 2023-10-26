@@ -3,7 +3,11 @@
   <main class="container">
     <div class="w-75">
       <div class="d-flex text-start my-3">
-        <a href="/forum/" class="text-decoration-none">
+        <a
+          style="cursor: pointer"
+          onclick="window.history.back();"
+          class="text-decoration-none"
+        >
           <i
             style="-webkit-text-stroke: 1px"
             class="bi bi-arrow-left fw-bold text-dark fs-4"
@@ -25,6 +29,9 @@
   }
   async function getPostById(post_id) {
     return fetch(`/forum/get-post/${post_id}/`).then((res) => res.json());
+  }
+  async function getBookById(book_id) {
+    return fetch(`/api/books/${book_id}`).then((res) => res.json());
   }
   function calculateTime(now, dateAdded) {
     let diffInMilliseconds = now - dateAdded;
@@ -49,6 +56,10 @@
     const user_id = "{{ user_id }}";
     const post_id = "{{ post_id }}";
     const post = await getPostById(post_id);
+    let book = null;
+    if (post[0].fields.book) {
+      book = await getBookById(post[0].fields.book);
+    }
     const htmlStrings = [];
     const comments = await getCommentsById(post[0].pk);
     let user = await getUserById(post[0].fields.user);
@@ -77,8 +88,17 @@
         </div>`;
     }
     htmlString += `</div>
-                            <h5 class="card-title">${post[0].fields.title}</h5>
-                            <p class="card-text">${post[0].fields.text}</p>`;
+              <h2 class="card-title m-0">${post[0].fields.title}</h2>
+                <h4 class="card-text">${post[0].fields.text}</h4>`;
+    if (post[0].fields.book) {
+      htmlString += `<div class="card" style="width: 18rem;">
+                  <div class="card-body">
+                    <h5 class="card-title">${book.title}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${book.authors[0].name}</h6>
+                  </div>
+                </div>
+                `;
+    }
     if (post[0].fields.image) {
       htmlString += `<img src="/media/${post[0].fields.image}" class="card-img-top w-50 h-50 img-fluid rounded" alt="${post[0].fields.title}">`;
     }
