@@ -21,7 +21,9 @@
                     <nav id="navbar">
                         <div class="main-menu stellarnav  ">
                             <ul class="menu-list">
-                                <li class="menu-item active"><a href="#home">Home</a></li>
+
+                                <li class="menu-item active"><a href="/" id="home">Home</a></li>
+
                                 <li class="menu-item has-sub">
                                     <a href="#pages" class="nav-link">Explore</a>
     
@@ -38,15 +40,19 @@
                                     </ul>
     
                                 </li>
-                                <li class="menu-item"><a href="#featured-books" class="nav-link">Publish a Book</a></li>
-                                <li class="menu-item"><a href="#popular-books" class="nav-link">Forum</a></li>
-                                <li class="menu-item"><a href="#special-offer" class="nav-link">My Books</a></li>
+
+                                <li class="menu-item"><a href="/publish/" id = "publish" class="nav-link">Publish a Book</a></li>
+                                <li class="menu-item"><a href= "/forum/" class="nav-link" id="forum">Forum</a></li>
+                                <li class="menu-item"><a href="/MyBooks/" class="nav-link" id = "MyBooks">My Books</a></li>
+
     
                                 <li class="menu-item has-sub">
                                     <a href="#pages" class="nav-link"><i class="icon icon-user"></i></a>
                                     <ul>
-                                        <li><a href="MyBooks.html"><i
-                                            class="icon icon-clipboard"></i><span>My Books</span></a></li>
+
+                                        <li><a href="/report/" id = "report"><i
+                                            class="icon icon-clipboard"></i><span>Report a Book</span></a></li>
+
                                         <li><a href="{%url 'main:logout'%}"><i class="fa fa-close"></i><span>Logout</span></a></li>
                                     </ul>
                                 </li>
@@ -81,16 +87,18 @@
             })
             if (activePage == "/"){
                 document.getElementById('home').classList.add('active');
-            } else if(activePage.includes( "/planner")){
-                document.getElementById('planner').classList.add('active');
-            } else if(activePage.includes( "/local-shops")){
-                document.getElementById('rekomendasi').classList.add('active');
-            } else if(activePage.includes( "/event")){
-                document.getElementById('rekomendasi').classList.add('active');
-            }  else if(activePage.includes( "/attraction")){
-                document.getElementById('rekomendasi').classList.add('active');
-            } else if(activePage.includes( "/forum")){
+
+            } else if(activePage.includes( "/forum/")){
                 document.getElementById('forum').classList.add('active');
+            } else if(activePage.includes( "/MyBooks/")){
+                document.getElementById('MyBook').classList.add('active');
+            } else if(activePage.includes( "/publish/")){
+                document.getElementById('publish').classList.add('active');
+            }  else if(activePage.includes( "/report/")){
+                document.getElementById('report').classList.add('active');
+            } else if(activePage.includes( "/bookdatabase")){
+                document.getElementById('bookdatabase').classList.add('active');
+
             }
             
             
