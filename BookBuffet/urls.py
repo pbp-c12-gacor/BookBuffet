@@ -24,4 +24,5 @@ urlpatterns = [
     path('report/', include('report.urls')),
     path('MyBooks/', include('MyBooks.urls')),
     path('api/', include('booksdatabase.urls')),
+    path('publish/', include('publish.urls')),
 ]

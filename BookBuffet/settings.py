@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "MyBooks",
     "booksdatabase",
     "rest_framework",
+    "publish",
 ]
 
 MIDDLEWARE = [
