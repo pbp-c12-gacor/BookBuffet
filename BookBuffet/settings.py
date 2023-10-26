@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "main",
     "forum",
     "report",
+    "MyBooks",
     "booksdatabase",
     "rest_framework",
 ]

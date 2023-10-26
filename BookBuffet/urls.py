@@ -22,5 +22,6 @@ urlpatterns = [
     path('', include('main.urls')),
     path('forum/', include('forum.urls')),
     # path('report/', include('report.urls')),
+    path('MyBooks/', include('MyBooks.urls')),
     path('api/', include('booksdatabase.urls')),
 ]
