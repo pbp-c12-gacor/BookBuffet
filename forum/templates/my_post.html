@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block content %}
-<div class="container d-flex flex-row" >
+<div class="container d-flex flex-row">
   <header>{% include 'sidebar.html'%}</header>
   <main>
     <div class="row" style="width: fit-content">
@@ -104,6 +104,25 @@
     }).then(refreshPosts);
 
     document.getElementById("form-post").reset();
+    return false;
+  }
+
+  function editPost(post_id) {
+    const csrfToken = document.querySelector(
+      'input[name="csrfmiddlewaretoken"]'
+    ).value;
+
+    // Construct the headers including the CSRF token
+    const headers = new Headers({
+      "X-CSRFToken": csrfToken, // Include the CSRF token here
+    });
+    fetch(`edit-post/${post_id}/`, {
+      method: "POST",
+      body: new FormData(document.querySelector("#form-post-edit")),
+      headers: headers,
+    }).then(refreshPosts);
+
+    document.getElementById("form-post-edit").reset();
     return false;
   }
 
