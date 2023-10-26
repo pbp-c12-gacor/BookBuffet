@@ -87,7 +87,10 @@ def create_post(request):
         image = request.FILES.get('image')
         book_id = request.POST.get('book')
         user = request.user
-        book = Book.objects.get(id=book_id)
+        if book_id :
+            book = Book.objects.get(id=book_id)
+        else:
+            book = None
         new_post = Post(title = title, image=image, text=text, user=user, book=book)
         new_post.save()
         return HttpResponse(b"CREATED", status=201)

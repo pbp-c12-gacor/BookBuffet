@@ -1,10 +1,8 @@
 {% extends 'base.html' %} {% block content %}
 <div class="container d-flex flex-row">
-  <header>{% include 'sidebar.html'%}</header>
   <main class="container">
     <div class="w-75">
       <h1 class="fw-bold">Home</h1>
-      <hr />
       <form
         class="p-1"
         id="form-post"
@@ -74,12 +72,10 @@
           <div id="upload-image"></div>
         </div>
       </form>
-
-      <hr />
       <div class="d-flex">
         <div class="dropdown mb-2 me-2">
           <button
-            class="btn btn-primary dropdown-toggle"
+            class="btn btn-primary dropdown-toggle rounded"
             type="button"
             data-bs-toggle="dropdown"
             data-bs-display="static"
@@ -99,9 +95,6 @@
         <div id="category-selected"></div>
       </div>
       <div id="posts"></div>
-      <a href="{% url 'main:logout' %}" class="btn btn-secondary"
-        ><i class="bi bi-box-arrow-right"></i> Logout</a
-      >
     </div>
     <!-- Modal -->
     <div
@@ -117,7 +110,7 @@
             <h5 class="modal-title" id="exampleModalLabel">Pilih Buku</h5>
             <button
               type="button"
-              class="btn-close"
+              class="btn-close btn-secondary"
               data-bs-dismiss="modal"
               aria-label="Close"
             ></button>
@@ -130,7 +123,7 @@
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-secondary rounded"
               data-bs-dismiss="modal"
             >
               Close
@@ -138,7 +131,7 @@
             <button
               id="add-buku"
               type="button"
-              class="btn btn-primary"
+              class="btn btn-primary rounded"
               data-bs-dismiss="modal"
             >
               Pilih Buku
@@ -294,15 +287,15 @@
                     <h4 class="text-dark fw-bold">${user[0].fields.username} <span class="fw-normal fs-6" style="color: gray"> · ${timeDifference}</span></h4>`;
       if (post.fields.user == user_id) {
         htmlString += `<div class="btn-group">
-          <button class="btn btn-sm border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.stopPropagation();"">
+          <button class="btn btn-sm border-0 top-0" style="width:auto; height:auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.stopPropagation();"">
             <i class="bi bi-three-dots"></i>
           </button>
-          <ul class="dropdown-menu" style="width:auto">
-            <li>
-              <button type="button" class="btn text-dark bg-transparent border-0" data-bs-toggle="modal" data-bs-target="#deleteModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-trash-fill text-dark"></i> Delete</button>  
+          <ul class="dropdown-menu rounded p-0 my-0" style="width:auto">
+            <li class="px-0 mx-0 fs-6">
+              <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#deleteModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-trash-fill text-dark"></i> Delete</button>  
             </li>
-            <li>
-              <button type="button" class="btn text-dark bg-transparent border-0" data-bs-toggle="modal" data-bs-target="#editModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-pencil-fill text-dark"></i> Edit</button>    
+            <li class="p-0 m-0 fs-6">
+              <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#editModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-pencil-fill text-dark"></i> Edit</button>    
             </li>
           </ul>
         </div>
