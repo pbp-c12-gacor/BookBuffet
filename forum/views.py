@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
 from forum.models import Post, User, Comment
+from booksdatabase.models import Book
 from forum.forms import PostForm, CommentForm
 from django.contrib import messages 
 from django.contrib.auth import logout
@@ -84,16 +85,38 @@ def create_post(request):
         title = request.POST.get('title')
         text = request.POST.get("content")
         image = request.FILES.get('image')
+        book_id = request.POST.get('book')
         user = request.user
-        new_post = Post(title = title, image=image, text=text, user=user)
+        if book_id :
+            book = Book.objects.get(id=book_id)
+        else:
+            book = None
+        new_post = Post(title = title, image=image, text=text, user=user, book=book)
         new_post.save()
         return HttpResponse(b"CREATED", status=201)
 
     return HttpResponseNotFound()
 
+@csrf_exempt
+def edit_post(request,post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == 'POST':
+        title = request.POST.get('title-edit')
+        text = request.POST.get('description-edit')
+        image = request.FILES.get('image-edit')
+        post.title = title
+        post.text = text
+        if image is not None:
+            post.image = image
+        post.save()
+
+        return HttpResponse(b"UPDATED", status=201)
+
+    return HttpResponseNotFound()
+
 def get_post(request):
     if request.method == 'GET':
-        posts = Post.objects.all()
+        posts = Post.objects.select_related('book').all()
         return HttpResponse(serializers.serialize("json", posts), content_type="application/json")
     else:
         return HttpResponse("Invalid HTTP method.", status=405)

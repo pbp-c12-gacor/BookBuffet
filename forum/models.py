@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from booksdatabase.models import Book
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -7,6 +9,8 @@ class Post(models.Model):
     text = models.TextField()
     image = models.ImageField(upload_to='posts/', null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
+    date_edited = models.DateTimeField(default=timezone.now)
+    book = models.ForeignKey(Book, on_delete=models.SET_NULL, null=True, blank=True)
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
