@@ -26,8 +26,8 @@ def create_report(request):
     return render(request, 'create_report.html', {'form': form})
 
 # Fungsi API untuk memberikan saran judul buku
-def get_book_suggestions(request):
-    query = request.GET.get('term', '')
-    books = Book.objects.filter(title__icontains=query)
-    suggestions = list(books.values_list('title', flat=True))
-    return JsonResponse(suggestions, safe=False)
+# def get_book_suggestions(request):
+#     query = request.GET.get('term', '')
+#     books = Book.objects.filter(title__icontains=query)
+#     suggestions = list(books.values_list('title', flat=True))
+#     return JsonResponse(suggestions, safe=False)
