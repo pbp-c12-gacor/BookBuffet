@@ -68,7 +68,7 @@ class BookSerializer(serializers.ModelSerializer):
                 category, _ = Category.objects.get_or_create(**category_data)
                 book.categories.add(category)
         # Cover image is not updated if cover_data is None (i.e. no new cover image is uploaded)
-        if cover_data is not None and cover_data != book.cover.url:
+        if cover_data is not None and cover_data != instance.cover:
             instance.cover.delete()
             ext = cover_data.name.split(".")[-1]
             book.cover.save(f"{book.id}.{ext}", cover_data, save=True)
