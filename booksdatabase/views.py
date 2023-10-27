@@ -28,6 +28,11 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     permission_classes = [IsAdminOrReadOnly]
 
+    def destroy(self, request, *args, **kwargs):
+        book = self.get_object()
+        book.cover.delete()
+        return super().destroy(request, *args, **kwargs)
+
 
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
