@@ -138,7 +138,7 @@
   function changeUrlAndRefreshPosts(name) {
     let params = new URLSearchParams();
     params.append("category", name);
-    history.pushState(null, "", `/?${params.toString()}`);
+    history.pushState(null, "", `/forum/mypost/?${params.toString()}`);
     addCategoryToPage(name);
     refreshPosts();
   }
@@ -221,18 +221,18 @@
                   <div class="d-flex justify-content-between">
                       <h4 class="text-dark fw-bold">${user[0].fields.username} <span class="fw-normal fs-6" style="color: gray"> · ${timeDifference}</span></h4>
                       <div class="btn-group">
-            <button class="btn btn-sm border-0 top-0" style="width:auto; height:auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.stopPropagation();"">
-              <i class="bi bi-three-dots"></i>
-            </button>
-            <ul class="dropdown-menu rounded p-0 my-0" style="width:auto">
-              <li class="px-0 mx-0 fs-6">
-                <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#deleteModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-trash-fill text-dark"></i> Delete</button>
-              </li>
-              <li class="p-0 m-0 fs-6">
-                <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#editModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-pencil-fill text-dark"></i> Edit</button>
-              </li>
-            </ul>
-          </div>
+          <button class="btn btn-sm border-0 top-0 m-0" style="width:auto; height:auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.stopPropagation();"">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <ul class="dropdown-menu rounded p-0 my-0 shadow bg-light" style="width:auto">
+            <li class="px-0 mx-0 fs-6">
+              <h4 type="button" class="btn text-dark border-0 fs-6 w-100 m-0 text-start" data-bs-toggle="modal" data-bs-target="#deleteModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-trash-fill text-dark"></i> Delete</h4>  
+            </li>
+            <li class="p-0 m-0 fs-6">
+              <h4 type="button" class="btn text-dark border-0 fs-6 w-100 m-0 text-start" data-bs-toggle="modal" data-bs-target="#editModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-pencil-fill text-dark"></i> Edit</h4>    
+            </li>
+          </ul>
+        </div>
                       `;
       htmlString += `</div>
                   <h2 class="card-title m-0">${post.fields.title}</h2>
@@ -264,8 +264,8 @@
                   Apakah Anda yakin ingin menghapus post ini?
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                  <button type="button" class="btn btn-danger" onclick="deletePost(${post.pk}); return false;" data-bs-dismiss="">Hapus</button>
+                  <button type="button" class="btn btn-secondary rounded" data-bs-dismiss="modal">Batal</button>
+                  <button type="button" class="btn btn-primary rounded" onclick="deletePost(${post.pk}); return false;" data-bs-dismiss="">Hapus</button>
                 </div>
               </div>
             </div>
@@ -295,8 +295,8 @@
                           </form>
                       </div>
                       <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal" onclick="editPost(${post.pk}); return false;">Edit Post</button>
+                          <button type="button" class="btn btn-secondary rounded" data-bs-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary rounded" id="button_add" data-bs-dismiss="modal" onclick="editPost(${post.pk}); return false;">Edit Post</button>
                       </div>
                   </div>
               </div>

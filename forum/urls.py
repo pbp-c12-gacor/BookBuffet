@@ -23,5 +23,5 @@ urlpatterns = [
     path('delete-comment/<int:comment_id>/', delete_comment, name='delete_comment'),
     path('delete-post/<int:post_id>/', delete_post, name='delete_post'),
     path('edit-post/<int:post_id>/', edit_post, name='edit_post'),
-    path('reply/<int:comment_id>/', create_reply, name='create_reply'),
+    path('edit-comment/<int:comment_id>/', edit_comment, name='edit_comment'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

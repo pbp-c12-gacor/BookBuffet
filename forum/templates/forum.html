@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <div class="container d-flex flex-row">
   <main class="container">
-    <div class="w-75">
+    <div class="w-100 md-mw-75">
       <h1 class="fw-bold">Home</h1>
       <form
         class="p-1"
@@ -222,10 +222,10 @@
   function addCategoryToPage(name) {
     document.getElementById(
       "category-selected"
-    ).innerHTML = `<div class="card px-1" style="max-height:50px">
-          <div class="card-body d-flex p-1">
-            <p class="mb-0 fs-6 fw-bold ">${name}</p>   
-            <a id="cancel-select" class="mb-1" style="color:gray; -webkit-text-stroke: 1px; cursor:pointer"><i class="bi bi-x"></i></a>    
+    ).innerHTML = `<div class="card px-1 circular-rounded" style="max-height:50px">
+          <div class="card-body d-flex p-1 justify-content-center">
+            <p class="mb-0 fs-6" style="color: gray">${name}</p>   
+            <a id="cancel-select" class="" style="color:gray; -webkit-text-stroke: 2px; cursor:pointer"><i class="bi bi-x"></i></a>    
           </div>
         </div>
 `;
@@ -292,21 +292,21 @@
         timeDifference = Math.round(diffInDays) + " d";
       }
       let htmlString = `
-        <article class="card mb-3 shadow bg-light" style="cursor:pointer" onclick="window.location.href='post/${post.pk}'">
+        <article class="card mb-3 shadow bg-light w-sm-full" style="cursor:pointer" onclick="window.location.href='post/${post.pk}'">
             <div class="card-body">
                 <div class="d-flex justify-content-between m-0">
                     <h4 class="text-dark m-0 fw-bold">${user[0].fields.username} <span class="fw-normal fs-6" style="color: gray"> · ${timeDifference}</span></h4>`;
       if (post.fields.user == user_id) {
         htmlString += `<div class="btn-group">
-          <button class="btn btn-sm border-0 top-0" style="width:auto; height:auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.stopPropagation();"">
+          <button class="btn btn-sm border-0 top-0 m-0" style="width:auto; height:auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.stopPropagation();"">
             <i class="bi bi-three-dots"></i>
           </button>
-          <ul class="dropdown-menu rounded p-0 my-0" style="width:auto">
+          <ul class="dropdown-menu rounded p-0 my-0 shadow bg-light" style="width:auto">
             <li class="px-0 mx-0 fs-6">
-              <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#deleteModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-trash-fill text-dark"></i> Delete</button>  
+              <h4 type="button" class="btn text-dark border-0 fs-6 w-100 m-0 text-start" data-bs-toggle="modal" data-bs-target="#deleteModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-trash-fill text-dark"></i> Delete</h4>  
             </li>
             <li class="p-0 m-0 fs-6">
-              <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#editModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-pencil-fill text-dark"></i> Edit</button>    
+              <h4 type="button" class="btn text-dark border-0 fs-6 w-100 m-0 text-start" data-bs-toggle="modal" data-bs-target="#editModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-pencil-fill text-dark"></i> Edit</h4>    
             </li>
           </ul>
         </div>
@@ -316,7 +316,7 @@
                 <h2 class="card-title m-0 fw-bolder">${post.fields.title}</h2>
                 <h4 class="card-text">${post.fields.text}</h4>`;
       if (post.fields.book) {
-        htmlString += `<div class="card" style="width: 18rem;">
+        htmlString += `<div class="card w-sm-auto">
                   <div class="card-body">
                     <h5 class="card-title">${book.title}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">${book.authors[0].name}</h6>
@@ -341,8 +341,8 @@
                 Apakah Anda yakin ingin menghapus post ini?
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-danger" onclick="deletePost(${post.pk}); return false;" data-bs-dismiss="">Hapus</button>
+                <button type="button" class="btn btn-secondary rounded" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary rounded" onclick="deletePost(${post.pk}); return false;" data-bs-dismiss="">Hapus</button>
               </div>
             </div>
           </div>
@@ -372,8 +372,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal" onclick="editPost(${post.pk}); return false;">Edit Post</button>
+                        <button type="button" class="btn btn-secondary rounded" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary rounded" id="button_add" data-bs-dismiss="modal" onclick="editPost(${post.pk}); return false;">Edit Post</button>
                     </div>
                 </div>
             </div>

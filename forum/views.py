@@ -114,6 +114,17 @@ def edit_post(request,post_id):
 
     return HttpResponseNotFound()
 
+@csrf_exempt
+def edit_comment(request,comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.method == 'POST':
+        text = request.POST.get('description-comment-edit')
+        comment.text = text
+        comment.save()
+
+        return HttpResponse(b"UPDATED", status=201)
+
+    return HttpResponseNotFound()
 def get_post(request):
     if request.method == 'GET':
         posts = Post.objects.select_related('book').all()
@@ -146,21 +157,6 @@ def create_comment(request, post_id):
         return HttpResponse(b"CREATED", status=201)
 
     return HttpResponseNotFound()
-
-def create_reply(request, comment_id):
-    parent_comment = get_object_or_404(Comment, id=comment_id)
-    form = CommentForm(request.POST or None)
-
-    if request.method == "POST" and form.is_valid():
-        reply = form.save(commit=False)
-        reply.user = request.user
-        reply.post = parent_comment.post
-        reply.parent = parent_comment
-        reply.save()
-        return redirect('forum:show_forum')
-
-    context = {'form': form}
-    return render(request, "create_reply.html", context)
 
 @csrf_exempt
 def delete_post(request, post_id):
