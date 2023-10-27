@@ -1,227 +1,70 @@
 {% extends 'base.html' %}
 {% load static %}
-
-<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<link rel="stylesheet" href="/static/css/style.css">
 {% block content %}
-<!-- <section class="ftco-section">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-6 text-center mb-4">
-        <h2 class="heading-section">Table #06</h2>
-      </div>
-    </div> -->
-    <div class="row">
-      <div class="col-md-12">
-        <!-- <h3 class="h5 mb-4 text-center">Table Accordion</h3> -->
-        <div class="table-wrap">
-          <table class="table">
-            <thead class="thead-primary">
-              <tr>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>total</th>
-                <th>&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="alert" role="alert">
-                <td>
-                  <label class="checkbox-wrap checkbox-primary">
-                    <input type="checkbox" checked>
-                    <span class="checkmark"></span>
-                  </label>
-                </td>
-                <td>
-                  <div class="img" style="background-image: url(/static/images/product-1.png);"></div>
-                </td>
-                <td>
-                  <div class="email">
-                    <span>Sneakers Shoes 2020 For Men </span>
-                    <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>
-                  </div>
-                </td>
-                <td>$44.99</td>
-                <td class="quantity">
-                  <div class="input-group">
-                     <input type="text" name="quantity" class="quantity form-control input-number" value="2" min="1" max="100">
-                  </div>
-                </td>
-                <td>$89.98</td>
-                <td>
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true"><i class="fa fa-close"></i></span>
-                  </button>
-                </td>
-              </tr>
+<style> 
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
 
-              <tr class="alert" role="alert">
-                <td>
-                  <label class="checkbox-wrap checkbox-primary">
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                  </label>
-                </td>
-                <td>
-                  <div class="img" style="background-image: url(/static/images/product-2.png);"></div>
-                </td>
-                <td>
-                  <div class="email">
-                    <span>Sneakers Shoes 2020 For Men </span>
-                    <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>
-                  </div>
-                </td>
-                <td>$30.99</td>
-                <td class="quantity">
-                  <div class="input-group">
-                     <input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-                  </div>
-                </td>
-                <td>$30.99</td>
-                <td>
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true"><i class="fa fa-close"></i></span>
-                  </button>
-                </td>
-              </tr>
+    table, th, td {
+        border: 1px solid #888888;
+    }
 
-              <tr class="alert" role="alert">
-                <td>
-                  <label class="checkbox-wrap checkbox-primary">
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                  </label>
-                </td>
-                <td>
-                  <div class="img" style="background-image: url(/static/images/product-3.png);"></div>
-                </td>
-                <td>
-                  <div class="email">
-                    <span>Sneakers Shoes 2020 For Men </span>
-                    <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>
-                  </div>
-                </td>
-                <td>$35.50</td>
-                <td class="quantity">
-                  <div class="input-group">
-                     <input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-                  </div>
-                </td>
-                <td>$35.50</td>
-                <td>
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true"><i class="fa fa-close"></i></span>
-                  </button>
-                </td>
-              </tr>
-
-              <tr class="alert" role="alert">
-                <td>
-                  <label class="checkbox-wrap checkbox-primary">
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                  </label>
-                </td>
-                <td>
-                  <div class="img" style="background-image: url(/static/images/product-4.png);"></div>
-                </td>
-                <td>
-                  <div class="email">
-                    <span>Sneakers Shoes 2020 For Men </span>
-                    <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>
-                  </div>
-                </td>
-                <td>$76.99</td>
-                <td class="quantity">
-                  <div class="input-group">
-                     <input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-                  </div>
-                </td>
-                <td>$76.99</td>
-                <td>
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true"><i class="fa fa-close"></i></span>
-                  </button>
-                </td>
-              </tr>
-
-              <tr class="alert" role="alert">
-                <td class="border-bottom-0">
-                  <label class="checkbox-wrap checkbox-primary">
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                  </label>
-                </td>
-                <td class="border-bottom-0">
-                  <div class="img" style="background-image: url(/static/images/product-1.png);"></div>
-                </td>
-                <td class="border-bottom-0">
-                  <div class="email">
-                    <span>Sneakers Shoes 2020 For Men </span>
-                    <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>
-                  </div>
-                </td>
-                <td class="border-bottom-0">$40.00</td>
-                <td class="quantity border-bottom-0">
-                  <div class="input-group">
-                     <input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-                  </div>
-                </td>
-                <td class="border-bottom-0">$40.00</td>
-                <td class="border-bottom-0">
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true"><i class="fa fa-close"></i></span>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<script src="/static/js/jquery.min.js"></script>
-<script src="/static/js/popper.js"></script>
-<script src="/static/js/bootstrap.min.js"></script>
-<script src="/static/js/main.js"></script>
-
-
-  
-  <h5 class="card-title">Avg rating:
-    <span class="fa fa-star {% if post.average_rating > 0 %} checked {% endif %}"></span>
-    <span class="fa fa-star {% if post.average_rating > 1 %} checked {% endif %}"></span>
-    <span class="fa fa-star {% if post.average_rating > 2 %} checked {% endif %}"></span>
-    <span class="fa fa-star {% if post.average_rating > 3 %} checked {% endif %}" ></span>
-    <span class="fa fa-star {% if post.average_rating > 4 %} checked {% endif %}"></span>
-</h5>
-<div id ="tes">
-
-</div>
+    th, td {
+        padding: 12px;
+        text-align: center;
+    }
 
 
 
-<!-- <ul class="btn btn-light list-inline rating-list">
-  <li onclick="rate(5, {{ post.id }})">
-      <i class="fa fa-star {% if post.user_rating > 4 %} checked {% endif %}" title="Rate 5"></i></li>
-  <li onclick="rate(4, {{ post.id }})">
-      <i class="fa fa-star {% if post.user_rating > 3 %} checked {% endif %}" title="Rate 4"></i></li>
-  <li onclick="rate(3, {{ post.id }})">
-      <i class="fa fa-star {% if post.user_rating > 2 %} checked {% endif %}" title="Rate 3"></i></li>
-  <li onclick="rate(2, {{ post.id }})">
-      <i class="fa fa-star {% if post.user_rating > 1 %} checked {% endif %}" title="Rate 2"></i></li>
-  <li onclick="rate(1, {{ post.id }})">
-      <i class="fa fa-star {% if post.user_rating > 0 %} checked {% endif %}" title="Rate 1"></i></li>
-</ul> -->
+
+
+</style>
+
+                 <div><img src="{% static '/images/product-1.png' %}" class="card-img-top planner w-25" style="min-width: 120px;" ></div>
+     
+
+
+
+<table id ="book_table"></table>
+
+<div id ="tes"></div>
+
+<button onclick = "refreshBooks()"> refresh</button>
+
 
 <script>
+  async function getBooks(){
+    console.log("testes")
+    return fetch("{% url 'MyBooks:get_mybooks_json' %}").then((res) => res.json())
+  }
+  async function refreshBooks() {
+    console.log("memekkokgabisa")
+      document.getElementById("book_table").innerHTML = ""
+      const mybooks = await getBooks()
+      let htmlString = `<tr>
+          <th>Cover</th>
+          <th>Book</th>
+          <th>Finished Reading</th>
+          <th colspan="3"></th>
+      </tr>`
+      mybooks.forEach((item) => {
+          htmlString += `\n<tr>
+            <td> <img src = ${item.fields.Book.cover} alt = "Image"</td>
+          <td><p>${item.fields.Book.title}<p>
+              <a href ="${item.fields.Book.preview_link}">Read Here</a>
+              <p>${item.fields.Book.description}</p>
+            </td>
+          <td></td>
+  `
+      })
+      
+      document.getElementById("book_table").innerHTML = htmlString
+  
+  }
+  refreshBooks()
 
 async function getProducts() {
         return fetch(`/api/books/`).then((res) => res.json())
@@ -230,7 +73,6 @@ async function getProducts() {
         document.getElementById("tes").innerHTML = ""
         const products = await getProducts()
         let htmlString = ``
-        console.log(products)
         products.forEach((item) => {
                 htmlString += `\n
                   <button onclick = "addProduct(${item.id})">${item.id}</button>`
@@ -250,8 +92,7 @@ async function getProducts() {
             }
         }).then(rest => {
             window.location.reload();
-            // you may want to update the rating here
-            // to simplify stuff, I just reload the page
+
         })
     }
 

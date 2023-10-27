@@ -5,7 +5,7 @@ This module contains the models for the Book Buffet application.
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Avg
-
+from MyBooks.models import *
 
 class Book(models.Model):
     """
@@ -24,6 +24,8 @@ class Book(models.Model):
     cover = models.ImageField(upload_to="covers", null=True, blank=True)
     isbn_10 = models.CharField(max_length=10, null=True, blank=True)
     isbn_13 = models.CharField(max_length=13, null=True, blank=True)
+
+
 
     # ini buat nunjukkin review
     def average_rating(self) -> float:

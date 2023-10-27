@@ -4,13 +4,16 @@ from MyBooks.models import *
 from django.shortcuts import HttpResponse
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
-# Create your views here.
+from django.core import serializers
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
+# Create your views here.
 # def show_my_books(request):
 #     return render(request, 'mybooks.html')
 
 
-
+MyBook.objects.all().delete()
 def show_my_books(request: HttpRequest) -> HttpResponse:
     books = Book.objects.all()
     # for post in books:
@@ -30,9 +33,16 @@ def add_my_books(request: HttpRequest, book_id:int):
     print("tes1")
     if request.method == 'POST':
         user = request.user
-        book_added = MyBook(Book = book, User=user)
+        book_added = MyBook(Book = book, user=user)
         book_added.save()
 
 
         return HttpResponse(b"CREATED", status=201)
     return HttpResponseNotFound()
+
+
+@login_required(login_url='/login')
+def get_mybooks_json(request):
+    book_item = MyBook.objects.filter(user=request.user)
+
+    return HttpResponse(serializers.serialize('json', book_item))

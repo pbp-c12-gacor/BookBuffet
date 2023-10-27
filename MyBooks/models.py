@@ -5,8 +5,7 @@ from booksdatabase.models import *
 # Create your models here.
 
 class MyBook(models.Model):
-    User = models.ForeignKey(User, on_delete= models.CASCADE)
-    Book = models.ForeignKey(Book, on_delete= models.CASCADE)
+    user = models.ForeignKey(User, on_delete= models.CASCADE)
     date_added = models.DateField(auto_now_add=True)
 
 class Review(models.Model):
