@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages 
 from django.urls import reverse
 from django.http import HttpResponseNotFound, HttpResponseRedirect
+from .forms import NewUserForm
 
 # Create your views here.
 @login_required(login_url='/login')
@@ -17,12 +18,18 @@ def show_main(request):
     return render(request, "main.html", context)
 
 def register(request):
-    form = UserCreationForm(request.POST)
+    form = NewUserForm()
 
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = NewUserForm(request.POST)
         if form.is_valid():
-            form.save()
+            if form.cleaned_data['isAdmin']:
+                if form.cleaned_data['referral_code'] != "PBPC12GACORMAXWIN":
+                    messages.error(request, 'Invalid referral code for Admin registration.')
+                    return redirect('main:register')
+            user = form.save(commit=False)  # Membuat instance pengguna tetapi tidak menyimpannya
+            user.is_staff = True
+            user.save()
             messages.success(request, 'Your account has been successfully registered!')
             return redirect('main:login')
     context = {'form': form}
