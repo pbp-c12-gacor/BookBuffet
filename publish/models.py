@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from booksdatabase.models import Author, Category
@@ -18,3 +19,6 @@ class Publish(models.Model):
     cover = models.ImageField(upload_to="covers", null=True, blank=True)
     isbn_10 = models.CharField(max_length=10, null=True, blank=True)
     isbn_13 = models.CharField(max_length=13, null=True, blank=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+    is_verified = models.BooleanField(default=False)
+    is_valid = models.BooleanField(default=False)
