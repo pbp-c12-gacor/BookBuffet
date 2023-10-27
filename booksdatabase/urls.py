@@ -9,7 +9,7 @@ router.register("categories", CategoryViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("books/search/", BookList.as_view()),
+    path("search/", BookList.as_view()),
     path("authors/<int:author_id>/books", BooksByAuthor.as_view()),
     path("categories/<int:category_id>/books", BooksByCategory.as_view()),
     path("books/isbn/<str:isbn>", BooksByISBN.as_view()),
