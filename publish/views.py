@@ -20,11 +20,6 @@ def show_publish(request):
     }
     return render(request, 'publish_book.html', context)
 
-@user_passes_test(lambda u: u.user.isAdmin)
-def show_publish_detail(request, id):
-    publish = Publish.objects.get(pk=id)
-
-
 @csrf_exempt
 # Method untuk melakukan pembuatan Publish
 def publish_book(request):
@@ -39,9 +34,11 @@ def publish_book(request):
         form = PublishForm()
     return render(request, 'upload_book.html', {'form': form})
 
+@user_passes_test(lambda user: user.is_staff)
 def verify_publish(request):
     publish_to_verify = Publish.objects.filter(is_verified=False)
     return render(request, 'verify_publish.html', {'publish_to_verify': publish_to_verify})
+
 
 def show_publish_detail(request, publish_id):
     publish = get_object_or_404(Publish, pk=publish_id)
