@@ -1,6 +1,5 @@
 {% extends 'base.html' %} {% block content %}
-<div class="container d-flex flex-row" >
-  <header>{% include 'sidebar.html'%}</header>
+<div class="container d-flex flex-row">
   <main class="container">
     <div class="w-75">
       <div class="d-flex text-start my-3">
@@ -63,7 +62,19 @@
                           <div class="d-flex justify-content-between">
                                 <h4 class="text-dark fw-bold">${user[0].fields.username} <span class="fw-normal fs-6" style="color: gray"> · ${timeDifference}</span></h4>`;
     if (post[0].fields.user == user_id) {
-      htmlString += `<button type="submit" onclick="deletePost(${post[0].pk}); return false;" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Delete Post</button>`;
+      htmlString += `<div class="btn-group">
+          <button class="btn btn-sm border-0 top-0" style="width:auto; height:auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.stopPropagation();"">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <ul class="dropdown-menu rounded p-0 my-0" style="width:auto">
+            <li class="px-0 mx-0 fs-6">
+              <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#deleteModal${post[0].pk}" onclick="event.stopPropagation();"><i class="bi bi-trash-fill text-dark"></i> Delete</button>  
+            </li>
+            <li class="p-0 m-0 fs-6">
+              <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#editModal${post[0].pk}" onclick="event.stopPropagation();"><i class="bi bi-pencil-fill text-dark"></i> Edit</button>    
+            </li>
+          </ul>
+        </div>`;
     }
     htmlString += `</div>
                             <h5 class="card-title">${post[0].fields.title}</h5>
@@ -71,7 +82,43 @@
     if (post[0].fields.image) {
       htmlString += `<img src="/media/${post[0].fields.image}" class="card-img-top w-50 h-50 img-fluid rounded" alt="${post[0].fields.title}">`;
     }
-    htmlString += `</div></div>
+    htmlString += `
+    
+    <div class="modal fade" id="editModal${post[0].pk}" tabindex="-1" aria-labelledby="editModalLabel${post[0].pk}" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                      <div class="modal-content">
+                                          <div class="modal-header">
+                                              <h1 class="modal-title fs-5" id="deleteModalLabel${post[0].pk}">Edit Post</h1>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                          <div class="modal-body">
+                                              <form id="form-post-edit" onsubmit="return false;" method="POST" enctype="multipart/form-data">
+                                                  {% csrf_token %}
+                                                  <div class="mb-3">
+                                                      <label for="title-edit" class="col-form-label">Title:</label>
+                                                      <input type="text" class="form-control" id="title-edit" name="title-edit" value="${post[0].fields.title}"></input>
+                                                  </div>
+                                                  <div class="mb-3">
+                                                      <label for="description-edit" class="col-form-label">Description:</label>
+                                                      <textarea class="form-control" id="description-edit" name="description-edit">${post[0].fields.text}</textarea>
+                                                  </div>
+                                                  <div class="mb-3">
+                                                      <label for="image-edit" class="col-form-label">Image:</label><br>
+                                                      <input type="file" class="custom-file-input" id="image-edit" name="image-edit" aria-describedby="inputGroupFileAddon01"/>
+                                                  </div>
+                                              </form>
+                                          </div>
+                                          <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                              <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal" onclick="editPost(${post[0].pk}); return false;">Edit Post</button>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+    </div>
+    
+    
+    </div>
                             <form id="form-comment" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="position-relative">
@@ -80,26 +127,104 @@
                                 </div>
 
                             </form>
-                            `;
+                            <div class="modal fade" id="deleteModal${post[0].pk}" tabindex="-1" aria-labelledby="deleteModalLabel${post[0].pk}" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="deleteModalLabel${post[0].pk}">Konfirmasi Hapus Post</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                          Apakah Anda yakin ingin menghapus post ini?
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                          <button type="button" class="btn btn-danger" onclick="deletePost(${post[0].pk}); return false;">Hapus</button>
+                                      </div>
+                                  </div>
+                              </div>
+                              </div>`;
     if (comments) {
       comments.sort(
         (a, b) => new Date(b.fields.date_added) - new Date(a.fields.date_added)
       );
+      console.log(comments);
       for (const comment of comments) {
         let dateAdded = new Date(comment.fields.date_added); // asumsikan ini adalah tanggal saat post ditambahkan
         let now = new Date(); // waktu saat ini
         timeDifference = calculateTime(now, dateAdded);
         htmlString += `
-                                        <div class="card mt-3 ml-5 bg-light shadow">
-                                          <div class="card-body">
-                                            <div class="d-flex justify-content-between">
-                                              <h4 class="text-dark fw-bold">${user[0].fields.username} <span class="fw-normal fs-6" style="color: gray"> · ${timeDifference}</span></h4>`;
+                      <div class="card mt-3 ml-5 bg-light shadow">
+                        <div class="card-body">
+                          <div class="d-flex justify-content-between">
+                            <h4 class="text-dark fw-bold">${user[0].fields.username} <span class="fw-normal fs-6" style="color: gray"> · ${timeDifference}</span></h4>`;
         if (comment.fields.user == user_id) {
-          htmlString += ` <button type="submit" onclick="deleteComment(${comment.pk}); return false;" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>`;
+          htmlString += ` 
+          <div class="btn-group">
+          <button class="btn btn-sm border-0 top-0" style="width:auto; height:auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.stopPropagation();"">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <ul class="dropdown-menu rounded p-0 my-0" style="width:auto">
+            <li class="px-0 mx-0 fs-6">
+              <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#deleteModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-trash-fill text-dark"></i> Delete</button>  
+            </li>
+            <li class="p-0 m-0 fs-6">
+              <button type="button" class="btn text-dark bg-transparent border-0 fs-6" data-bs-toggle="modal" data-bs-target="#editModal${post.pk}" onclick="event.stopPropagation();"><i class="bi bi-pencil-fill text-dark"></i> Edit</button>    
+            </li>
+          </ul>
+        </div>`;
         }
         htmlString += `</div>
                           <p class="card-text">${comment.fields.text}</p>
-                          </div>
+                        </div>
+                        <div class="modal fade" id="deleteModal${post[0].pk}" tabindex="-1" aria-labelledby="deleteModalLabel${post[0].pk}" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel${post[0].pk}">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Apakah Anda yakin ingin menghapus post ini?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" onclick="deletePost(${post[0].pk}); return false;" data-bs-dismiss="">Hapus</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="editModal${post[0].pk}" tabindex="-1" aria-labelledby="editModalLabel${post[0].pk}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel${post[0].pk}">Edit Post</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-post-edit" onsubmit="return false;" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="title-edit" class="col-form-label">Title:</label>
+                                <input type="text" class="form-control" id="title-edit" name="title-edit" value="${post[0].fields.title}"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description-edit" class="col-form-label">Description:</label>
+                                <textarea class="form-control" id="description-edit" name="description-edit">${post[0].fields.text}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image-edit" class="col-form-label">Image:</label><br>
+                                <input type="file" class="custom-file-input" id="image-edit" name="image-edit" aria-describedby="inputGroupFileAddon01"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal" onclick="editPost(${post[0].pk}); return false;">Edit Post</button>
+                    </div>
+                </div>
+            </div>
+        </div>
                       </div>`;
       }
     }
@@ -128,6 +253,25 @@
     return false;
   }
 
+  function editPost(post_id) {
+    const csrfToken = document.querySelector(
+      'input[name="csrfmiddlewaretoken"]'
+    ).value;
+
+    // Construct the headers including the CSRF token
+    const headers = new Headers({
+      "X-CSRFToken": csrfToken, // Include the CSRF token here
+    });
+    fetch(`/forum/edit-post/${post_id}/`, {
+      method: "POST",
+      body: new FormData(document.querySelector("#form-post-edit")),
+      headers: headers,
+    }).then(refreshPosts);
+
+    document.getElementById("form-post-edit").reset();
+    return false;
+  }
+
   function deletePost(post_id) {
     fetch(`/forum/delete-post/${post_id}/`, {
       method: "DELETE",
@@ -138,7 +282,7 @@
   }
 
   function deleteComment(comment) {
-    fetch(`delete-comment/${comment}/`, {
+    fetch(`/forum/delete-comment/${comment}/`, {
       method: "DELETE",
     }).then(refreshPosts);
     return false;

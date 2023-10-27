@@ -30,10 +30,10 @@
 
 ## 👥 Anggota Kelompok C-12 👥
 * [Ricardo Palungguk Natama](https://github.com/odracheer) (2206082700)
-* [Faris Zhafir Faza](https://github.com/Marsupilamieu) (2206081931)
+* [Faris Zhafir Faza](https://github.com/Marsupilamieue) (2206081931)
 * [Fiona Ratu Maheswari]( https://github.com/fionafrm) (2206024575)
 * [Muhammad Faishal Adly Nelwan](https://github.com/pesolosep) (2206030754)
-* [Muhammad Andhika Prasetya](https://github.com/radityahnf) (2206031302)
+* [Muhammad Andhika Prasetya](https://github.com/andhikapraa) (2206031302)
 
 ## 📚 Latar Belakang BookBuffet 📚
 Mengingat perkembangan teknologi yang sangat pesat saat ini sehingga terjadi perubahan pola perilaku masyarakat. Kini, masyarakat cenderung menggunakan perangkat seluler dalam mengakses informasi. Hal ini dikarenakan mudahnya proses mengakses informasi apapun dari internet melalui perangkat seluler yang mereka miliki. Namun, masih terdapat tantangan yang dialami oleh masyarakat, seperti kesulitan dalam memilih buku sesuai dengan minat pribadi. BookBuffet hadir sebagai solusi untuk tantangan ini.</br>
