@@ -9,19 +9,19 @@ This app is a simple rest api that allows you to create, read, update and delete
 ### Retrieve all books
 
 ```http
-GET /books
+GET /api/books
 ```
 
 ### Retrieve book by id
 
 ```http
-GET /books/${id}
+GET /api/books/${id}
 ```
 
 ### Create a new book
 
 ```http
-POST /books
+POST /api/books
 ```
 
 ```body
@@ -45,14 +45,15 @@ POST /books
     "language": "", // language of the book (optional)
     "preview_link": "", // preview link of the book (optional)
     "cover": image, // cover of the book (optional)
-    "industry_identifiers": json // industry identifiers of the book (optional)
+    "isbn_10": "", // isbn 10 of the book (optional)
+    "isbn_13": "", // isbn 13 of the book (optional)
 }
 ```
 
 ### Update a book
 
 ```http
-PUT /books/${id}
+PUT /api/books/${id}
 ```
 
 ```body
@@ -76,76 +77,77 @@ PUT /books/${id}
     "language": "", // language of the book (optional)
     "preview_link": "", // preview link of the book (optional)
     "cover": image, // cover of the book (optional)
-    "industry_identifiers": json // industry identifiers of the book (optional)
+    "isbn_10": "", // isbn 10 of the book (optional)
+    "isbn_13": "", // isbn 13 of the book (optional)
 }
 ```
 
 ### Delete a book
 
 ```http
-DELETE /books/${id}
+DELETE /api/books/${id}
 ```
 
 ## Retrieve all authors
 
 ```http
-GET /authors
+GET /api/authors
 ```
 
 ## Retrieve all categories
 
 ```http
-GET /categories
+GET /api/categories
 ```
 
 ## Retrieve all books by author
 
 ```http
-GET /authors/${id}/books
+GET /api/authors/${id}/books
 ```
 
 ## Retrieve all books by category
 
 ```http
-GET /categories/${id}/books
+GET /api/categories/${id}/books
 ```
 
 ## Retrieve all books by author and category
 
 ```http
-GET /authors/${id}/categories/${id}/books
+GET /api/authors/${id}/categories/${id}/books
 ```
 
 ## Retrieve book by isbn (10 or 13)
 
 ```http
-GET /books/isbn/${isbn}
+GET /api/books/isbn/${isbn}
 ```
 
 ## Search books
 
 ```http
-GET /books/search/?search=${query}
+GET /api/books/search/?search=${query}
 ```
 
 ## Search books by author
 
 ```http
-GET /books/search/?search=${query},author:${author}
+GET /api/search/?search=${query},author:${author}
 or
-GET /books/search/?search=author:${author}
+GET /api/search/?search=author:${author}
 ```
 
 ## Search books by title
 
 ```http
-GET /books/search/?search=title:${title}
+GET /api/search/?search=title:${title}
 or
-GET /books/search/?search=${title}
+GET /api/search/?search=${title}
 ```
 
 ## Search books by category
 
 ```http
-GET /books/search/?search=category:${category}
+GET /api/search/?search=category:${category}
 ```
