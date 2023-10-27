@@ -8,5 +8,5 @@ app_name = 'MyBooks'
 
 urlpatterns = [
     path('', show_my_books, name='show_my_books'),
-
+    path('rate/<int:post_id>/<int:rating>/', rate),
 ]

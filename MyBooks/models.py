@@ -8,8 +8,4 @@ class MyBook(models.Model):
     Book = models.ForeignKey(Book, on_delete= models.CASCADE)
     date_added = models.DateField(auto_now_add=True)
 
-class Review(models.Model):
-    MyBook = models.ForeignKey(MyBook, on_delete= models.CASCADE)
-    review = models.TextField()
-    score = models.IntegerField()
 

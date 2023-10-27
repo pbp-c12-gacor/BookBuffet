@@ -30,7 +30,7 @@ class Book(models.Model):
         return Rating.objects.filter(post=self).aggregate(Avg("rating"))["rating__avg"] or 0
 
     def __str__(self):
-        return f"{self.header}: {self.average_rating()}"
+        return f"{self.average_rating()}"
 
 
 class Author(models.Model):
@@ -58,4 +58,4 @@ class Rating(models.Model):
     rating = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.post.header}: {self.rating}"
+        return f"{self.rating}"
