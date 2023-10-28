@@ -60,6 +60,10 @@
 
                                         <li><a href="/report/" id = "report"><i
                                             class="icon icon-clipboard"></i><span>Report a Book</span></a></li>
+                                            {% if user.is_staff %}
+                                            <li><a href="/report/show_report/" id = "show_report"><i
+                                                class="icon icon-clipboard"></i><span>Show Reports</span></a></li>
+                                            {% endif %}
 
                                         <li><a href="{%url 'main:logout'%}"><i class="fa fa-close"></i><span>Logout</span></a></li>
                                     </ul>

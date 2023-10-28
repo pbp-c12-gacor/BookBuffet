@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+<table>
+    <tr>
+        <th>Username</th>
+        <th>Book's Title</th>
+        <th>Description</th>
+        <th>Date Added</th>
+    </tr>
+    {% for report in reports %}
+        <tr>
+            <td>{{report.user.Username}}</td>
+            <td>{{report.book.title}}</td>
+            <td>{{report.comment}}</td>
+            <td>{{report.date_added}}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<br>
+{% endblock content %}
