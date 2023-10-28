@@ -14,6 +14,7 @@ from .forms import PublishForm
 from django.contrib.auth.decorators import user_passes_test
 
 # Create your views here.
+@login_required(login_url='/login')
 def show_publish(request):
     context = {
 
@@ -34,11 +35,11 @@ def publish_book(request):
         form = PublishForm()
     return render(request, 'upload_book.html', {'form': form})
 
-@user_passes_test(lambda user: user.is_staff)
 def verify_publish(request):
-    publish_to_verify = Publish.objects.filter(is_verified=False)
-    return render(request, 'verify_publish.html', {'publish_to_verify': publish_to_verify})
-
+    if request.user.is_staff:
+        publish_to_verify = Publish.objects.filter(is_verified=False)
+        return render(request, 'verify_publish.html', {'publish_to_verify': publish_to_verify})
+    return render(request, 'not_permitted.html', {})
 
 def show_publish_detail(request, publish_id):
     publish = get_object_or_404(Publish, pk=publish_id)
