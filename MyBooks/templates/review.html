@@ -29,7 +29,6 @@
             <div class="">
                 <h2 class="ms-5">Your Review:</h2>
                 <div id="user-review" class="d-flex flex-column justify-content-center mt-5"></div>
-
                 </div>
 
                 <h2 class="ms-5">Reviews:</h2>
@@ -76,10 +75,6 @@
                 </div>
 
 
-
-   
-
-
 <script>
     const book_id ="{{book.id}}"
     const mybook = "{{mybook}}"
@@ -104,7 +99,7 @@
                             <div class="review-details d-flex flex-row">
                                 <div class="user d-flex flex-row">
                                     <span class="fa fa-user me-1 me-3" style="font-size: 36px;"></span>
-                                    <p style="font-size: 20px; width: 250px;">${review.fields.user}</p>
+                                    <p style="font-size: 20px; width: 250px;">YOU</p>
                                 </div>
                                 <div class="rating mx-2" style="width: 400px;">
                                     <span>Rated The Book:</span>
@@ -112,63 +107,21 @@
                                     <span>${review.fields.rating}.0/5.0</span>
                                 </div>
                                 <div class="text-left" style="width: 140px;">
-                                   <span>Published on:<\span>
                                     <span> ${review.fields.date_added} </span>
-            
+
+                                </div>
+                            </div>
                             <div class="review text mt-2" style="width: 500px; height: auto;">
                                 ${review.fields.review}
                             </div>
-                        </div>
+                            </div>
+                            </div>
+                            <div class="buttons d-flex flex-row mt-4 justify-content-center">
+                        <button type="button" id="button_delete" onclick="deleteReview(${book_id}); return false;">Delete</button>
                     </div>
-                    <div class="buttons d-flex flex-row mt-4 justify-content-center">
-
-                        </div>
+                
                     `
-                //     </div>
 
-                            //     <a href="/edit-review/${review.pk}" data-bs-target="#editModal">Edit </a>
-                            // </div>
-                            
-        //             htmlString+= `
-        //                         <div class="modal fade" id="editModal${review.pk}" tabindex="-1" aria-labelledby="editModalLabel${review.pk}" aria-hidden="true">
-        //     <div class="modal-dialog">
-        //         <div class="modal-content">
-        //             <div class="modal-header">
-        //                 <h1 class="modal-title fs-5" id="deleteModalLabel${review.pk}">Edit Post</h1>
-        //                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        //             </div>
-        //             <div class="modal-body">
-
-        //             <form id="form" onsubmit="return false;">
-        //                             {% csrf_token %}
-        //                             <select id ="rating" name = "rating" class="form-select" aria-label="Default select example">
-        //                                 <option value="0"  selected>Pick a Rating</option>
-        //                                 <option value="1">⭐
-        //                                 </option>
-        //                                 <option value="2">⭐⭐
-        //                                 </option>
-        //                                 <option value="3">⭐⭐⭐
-        //                                 </option>
-        //                                 <option value="4">⭐⭐⭐⭐
-        //                                 </option>
-        //                                 <option value="5">⭐⭐⭐⭐⭐
-        //                                 </option>
-        //                               </select>
-        //                             <div class="mb-3">
-        //                                 <label for="review" class="col-form-label">comment</label>
-        //                                 <textarea class="form-control" id="review" name="review">${review.fields.review}</textarea>
-        //                             </div>
-        //                         </form>
-        //                     </div>
-
-        //             <div class="modal-footer">
-        //                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        //                 <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal" onclick="editPost(${post.pk}); return false;">Edit Post</button>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
-// `
             } else if (mybook == "kosong"){
                 htmlString += `<button  id="add_my_books" data-book-id="${book_id}"  onclick = "addProduct(${book_id})">Add to My Books</button>`
             }
@@ -182,27 +135,12 @@
         }
         refreshReview()
 
-        function editPost(review_id) {
-    const csrfToken = document.querySelector(
-      'input[name="csrfmiddlewaretoken"]'
-    ).value;
-
-    // Construct the headers including the CSRF token
-    const headers = new Headers({
-      "X-CSRFToken": csrfToken, // Include the CSRF token here
-    });
-    fetch(`edit-review/${review_id}/`, {
-      method: "POST",
-      body: new FormData(document.querySelector("#form-post-edit")),
-      headers: headers,
-    }).then(refreshReview).then(refreshReviews);
-
-    document.getElementById("form-post-edit").reset();
-    return false;
-  }
-
-
-
+        function deleteReview(book_id) {
+            fetch(`delete-review/${book_id}/`, {
+                method: 'DELETE'
+            }).then(refreshReview).then(refreshReviews)
+            return false
+        }
 
         async function refreshReviews() {
             const reviews = await getReviews()
@@ -211,14 +149,13 @@
             let ratingChar = ''
             reviews.forEach((review) => {
                 let rating = review.fields.rating
-
                 htmlString += `\n
                 <div class="user-review container" style="width: 900px; height: 180px;">
                         <div class="card d-flex flex-column p-4">
                             <div class="review-details d-flex flex-row">
                                 <div class="user d-flex flex-row">
                                     <span class="fa fa-user me-1 me-3" style="font-size: 36px;"></span>
-                                    <p style="font-size: 20px; width: 250px;">${review.fields.user}</p>
+                                    <p style="font-size: 20px; width: 250px;">${review.fields.username}</p>
                                 </div>
                                 <div class="rating mx-2" style="width: 400px;">
                                     <span>Rated The Book:</span>
@@ -265,14 +202,16 @@
 })
 
   async function addProduct(book_id) {
-    console.log("masuk gaaaaa")
         fetch(`/MyBooks/create-product-ajax/${book_id}/`, {
             method: "POST",
         }).then(refreshReview).then(refreshReviews)
-
         return false
     }
 
+
+
+
+    document.getElementById("button_delete").onclick = deleteReview
 </script>
 
 
