@@ -3,8 +3,6 @@ This module contains the models for the Book Buffet application.
 """
 
 from django.db import models
-from django.contrib.auth.models import User
-from django.db.models import Avg
 
 
 class Book(models.Model):

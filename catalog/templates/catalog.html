@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %} Catalog {% endblock %}
+
+{% block content %}
+    <section id="catalog" class="bookshelf">
+        <div class="container">
+            <div class="row">
+				<div class="col-md-12">
+
+					<div class="section-header align-center">
+						<div class="title">
+							<span>"Books are a uniquely portable magic." - Stephen King</span>
+						</div>
+						<h2 class="section-title">Bookshelf</h2>
+					</div>
+
+					<ul class="tabs">
+						<li data-tab-target="#all-genre" class="active tab">All Genre</li>
+						{% for category in categories %}
+							<li data-tab-target="#{{ category.processed_name }}" class="tab">{{ category.name }}</li>
+						{% endfor %}
+					</ul>
+
+					<div class="tab-content">
+						<div id="all-genre" data-tab-content class="active">
+							<div class="row row-cols-4">
+								{% for book in all_books %}
+									<div class="col">
+										<div class="product-item" data-bs-toggle="modal" data-bs-target="#modalBook" onclick="showBookModal({{ book.id }})">
+											<figure class="product-style">
+												<img src="/media/{{ book.cover }}" alt="Books" class="product-item">
+												<button type="button" class="add-to-cart" data-product-tile="add-to-cart" onclick="addToMyBooks({{ book.id }})">Add to MyBooks</button>
+											</figure>
+											<figcaption>
+												<h3>{{ book.title }}</h3>
+												<span>{{ book.authors.first }}{% if book.authors.count > 1 %} et al.{% endif %}</span>
+												<div class="item-price">&#11088; {{ book.average_rating }}</div>
+											</figcaption>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+						{% for category in categories %}
+						<div id="{{ category.processed_name }}" data-tab-content>
+							<div class="row row-cols-4">
+								{% for book in category.books %}
+									<div class="col">
+										<div class="product-item" data-bs-toggle="modal" data-bs-target="#modalBook" onclick="showBookModal({{ book.id }})">
+											<figure class="product-style">
+												<img src="/media/{{ book.cover }}" alt="Books" class="product-item">
+												<button type="button" class="add-to-cart" data-product-tile="add-to-cart" onclick="addToMyBooks({{ book.id }})">Add to MyBooks</button>
+											</figure>
+											<figcaption>
+												<h3>{{ book.title }}</h3>
+												<span>{{ book.authors.first }}{% if book.authors.count > 1 %} et al.{% endif %}</span>
+												<div class="item-price">&#11088; {{ book.average_rating }}</div>
+											</figcaption>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<div class="modal fade" id="modalBook" tabindex="-1" aria-labelledby="modalBookLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title" id="modalBookLabel">
+						<h3 id="book-title"></h3>
+						<span id="book-authors"></span>
+					</div>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-4">
+							<img id="book-cover" src="" alt="Book Cover">
+						</div>
+						<div class="col-md-8">
+							<p id="book-subtitle"></p>
+							<p id="book-description"></p>
+							<p id="book-publisher"></p>
+							<p id="book-published-date"></p>
+							<p id="book-page-count"></p>
+							<p id="book-categories"></p>
+							<p id="book-average-rating"></p>
+							<p id="book-language"></p>
+							<p id="book-isbn"></p>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="book-add-to-mybooks" type="button" class="btn btn-primary" onclick="addToMyBooks()">Add to MyBooks</button>
+					<a id="book-reviews-link" href="" target="_blank" class="btn btn-primary">Reviews</a>
+					<a id="book-preview-link" href="" target="_blank" class="btn btn-primary">Preview</a>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+    <script>
+		// Add to MyBooks
+		async function addToMyBooks(book_id) {
+			fetch(`/MyBooks/create-product-ajax/${book_id}/`, {
+				method: 'POST',
+			}).then(response => {
+				if (response.ok) {
+					alert('Book added to MyBooks');
+				}
+				else {
+					throw new Error(response.statusText);
+				}
+			}).catch(error => {
+				console.log(error);
+			});
+		};
+
+		// Switch Tabs
+		setTimeout(function() {
+			const tabs = document.querySelectorAll('[data-tab-target]');
+			const tabContents = document.querySelectorAll('[data-tab-content]');
+			tabs.forEach(tab => {
+				tab.addEventListener('click', () => {
+					const target = document.querySelector(tab.dataset.tabTarget);
+					tabContents.forEach(tabContent => {
+						tabContent.classList.remove('active');
+					});
+					tabs.forEach(tab => {
+						tab.classList.remove('active');
+					});
+					tab.classList.add('active');
+					target.classList.add('active');
+				});
+			});
+		}, 1000);
+
+		// Book Modal
+		const modal = document.getElementById('modalBook');
+		async function showBookModal(book_id) {
+			const book = await fetch(`/api/books/${book_id}/`).then(response => response.json());
+			console.log(book);
+			document.getElementById('book-title').innerHTML = book.title;
+			book.authors.forEach(author => {
+				document.getElementById('book-authors').innerHTML += `${author.name}, `;
+			});
+			document.getElementById('book-authors').innerHTML = document.getElementById('book-authors').innerHTML.slice(0, -2);
+			document.getElementById('book-subtitle').innerHTML = book.subtitle;
+			document.getElementById('book-description').innerHTML = book.description;
+			document.getElementById('book-publisher').innerHTML = `Publisher: ${book.publisher}`;
+			document.getElementById('book-published-date').innerHTML = `Published Date: ${book.published_date}`;
+			document.getElementById('book-page-count').innerHTML = `Page Count: ${book.page_count}`;
+			document.getElementById('book-categories').innerHTML = `Categories: `;
+			book.categories.forEach(category => {
+				document.getElementById('book-categories').innerHTML += `${category.name}, `;
+			});
+			{% for book in all_books %}
+				if ({{ book.id }} == book_id) {
+					document.getElementById('book-average-rating').innerHTML = `Average Rating: {{ book.average_rating }}`;
+				}
+			{% endfor %}
+			document.getElementById('book-language').innerHTML = `Language: ${book.language}`;
+			document.getElementById('book-isbn').innerHTML = `ISBN: ${book.isbn_10} (ISBN-10), ${book.isbn_13} (ISBN-13)`;
+			document.getElementById('book-cover').src = `${book.cover}`;
+			document.getElementById('book-reviews-link').href = `/MyBooks/show-review/${book_id}/`;
+			document.getElementById('book-preview-link').href = book.preview_link;
+			document.getElementById('book-add-to-mybooks').onclick = function() { addToMyBooks(book_id); };
+		};
+	</script>
+{% endblock %}
