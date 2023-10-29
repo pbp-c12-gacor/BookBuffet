@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "booksdatabase",
     "rest_framework",
     "publish",
+    "catalog",
 ]
 
 MIDDLEWARE = [
