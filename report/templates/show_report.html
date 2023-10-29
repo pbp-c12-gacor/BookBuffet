@@ -4,6 +4,8 @@
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <style>
     th, td {
         text-align: center;
@@ -62,4 +64,23 @@
 </table>
 
 <br>
+
+<script>
+    function deleteReport(id) {
+        let url = `/delete/${id}/`;
+        $.ajax({
+            url: url,
+            type: "DELETE",
+            data: {
+                'csrfmiddlewaretoken': "{{ csrf_token }}"
+            },
+            success: function() {
+                alert("Deleted");
+            },
+            error: function() {
+                alert("Error");
+            }
+        });
+    }
+</script>
 {% endblock content %}

@@ -17,4 +17,5 @@ urlpatterns = [
     path('get-unverified-publish/', get_unverified_publish, name='get_unverified_publish'),
     path('get-user/<int:id>/', get_user, name='get_user'),
     path('confirming-publish/<int:id>/', confirming_publish, name='confirming_publish'),
+    path('my-publish/delete-publish/<int:id>/', delete_publish_by_id, name='delete_publish_by_id')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
