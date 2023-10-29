@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<title>BookSaw - Free Book Store HTML CSS Template</title>
+<title>Login to Book Buffet</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,36 +34,50 @@
 
 {% block content %}
 
-<div class="showcase">
+<style>
+    .showcase {
+        text-align: center;
+    }
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+</style>
+<body>
+    <div class="showcase">
+        
+        <h1 class="text-title">Sign In</h1>
+        
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="username" id="username" placeholder="Username" class="form-control">
+                <input type="password" name="password" id="password" placeholder="Password" class="form-control">
+            </div>
+            <div class="form-group">
+                <input class="login-button" type="submit" value="Login">
+            </div>
+        </form>
     
-    <h1 class="text-title">Sign In</h1>
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     
-    <form method="POST" action="">
-        {% csrf_token %}
-        <div class="form-group">
-            <input type="text" name="username" id="username" placeholder="Username" class="form-control">
-            <input type="password" name="password" id="password" placeholder="Password" class="form-control">
+        <div class="showcase-bottom">
+            Don't have an account yet? 
+            <div class="showcase-register" >
+                <a href="{% url 'main:register' %}" >Register Now</a>
+            </div>
         </div>
-        <div class="form-group">
-            <input class="login-button" type="submit" value="Login">
-        </div>
-    </form>
-
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    <div class="showcase-bottom">
-        Don't have an account yet? 
-        <div class="showcase-register" >
-            <a href="{% url 'main:register' %}" >Register Now</a>
-        </div>
+        
     </div>
-    
-</div>
+</body>
 
 {% endblock content %}
