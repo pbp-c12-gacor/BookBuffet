@@ -15,4 +15,5 @@ urlpatterns = [
     path('show-review/<int:book_id>', show_review, name ='show_review'),
     path('show-review/get-reviews/<int:book_id>', get_bookreviews_json, name='get_bookreviews_json'),
     path('show-review/get-user-reviews/<int:book_id>', get_user_review, name='get_user_review'),
+    path('show-review/edit-review/<int:reviewId>/', edit_review, name="edit_review")
 ]

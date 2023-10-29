@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from booksdatabase.models import *
 from MyBooks.models import *
 from django.shortcuts import HttpResponse
@@ -9,18 +9,14 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from MyBooks.forms import *
 import json
-# Create your views here.
-# def show_my_books(request):
-#     return render(request, 'mybooks.html')
 
-Review.objects.all().delete()
 
+@login_required(login_url='/login')
 def show_my_books(request: HttpRequest) -> HttpResponse:
     books = Book.objects.all()
-    # for post in books:
-    #     rating = Rating.objects.filter(books=books, user=request.user).first()
-    #     post.user_rating = rating.rating if rating else 0
-    return render(request, "mybooks.html", {"posts": books})
+    mybookForm = MyBookForm(request.POST or None)
+    
+    return render(request, "mybooks.html", {"posts": books, 'mybookForm' : mybookForm })
 
 
 
@@ -46,7 +42,9 @@ def remove_from_cart(request):
         book_id = json.loads(request.body).get('id')
         user = request.user
         my_book, created = MyBook.objects.get_or_create(user=user)
+        review = Review.objects.get(book = book_id)
         book = Book.objects.get(id= book_id)
+        review.delete()
         my_book.books.remove(book)
         return HttpResponse(b"DELETED", 201)
 
@@ -74,15 +72,25 @@ def add_review(request:HttpRequest, book_id:int):
     return HttpResponseNotFound()
     
 
+@login_required(login_url='/login')
 @csrf_exempt
 def show_review(request, book_id):
     book = Book.objects.get(id = book_id)
+    try:
+        mybook = MyBook.objects.get(books=book)
+    except:
+        mybook = "kosong"
+    
     review = Review.objects.filter(book=book)
+    review_form= ReviewForm(request.POST or None)
     average_rating = Review.objects.filter(book = book).aggregate(Avg("rating"))["rating__avg"] or 0
     context = {
         'book':book,
         'reviews': review,
-        'average': average_rating
+        'average': average_rating,
+        'mybook' : mybook,
+        'review_form' : review_form
+
     }
 
     return render(request, "review.html", context)
@@ -100,14 +108,16 @@ def get_user_review(request, book_id):
     review = Review.objects.filter(user=request.user, book=book)
     return HttpResponse(serializers.serialize('json', review))
 
-def edit_review(request, book_id, reviewId):
-    review = Review.objects.get(pk = reviewId)
-    form = ReviewForm(request.POST or None, instance=review)
+@csrf_exempt
+def edit_review(request,review_id):
+    review = get_object_or_404(Review, pk=review_id)
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        review = request.POST.get('review')
+        review.rating = rating
+        review.review = review
+        review.save()
 
-    if form.is_valid() and request.method == "POST":
-        form.save()
-        return HttpResponseRedirect(reverse("reviewbook:show_review"))
-    
-    context = {'form': form}
-    return render(request, "review.html", context)
+        return HttpResponse(b"UPDATED", status=201)
+
 
