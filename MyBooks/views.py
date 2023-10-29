@@ -1,3 +1,4 @@
+from audioop import avg
 from django.shortcuts import get_object_or_404, render
 from booksdatabase.models import *
 from MyBooks.models import *
@@ -9,6 +10,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from MyBooks.forms import *
 import json
+from django.db.models import Avg
 
 
 @login_required(login_url='/login')
@@ -23,7 +25,6 @@ def show_my_books(request: HttpRequest) -> HttpResponse:
 @csrf_exempt
 def add_my_books(request: HttpRequest, book_id:int):
     book = Book.objects.get(id= book_id)
-    print("tes1")
     my_book, created = MyBook.objects.get_or_create(user=request.user)
     if request.method == 'POST':
         my_book.books.add(book)
@@ -59,7 +60,6 @@ def remove_from_cart(request):
 
 @csrf_exempt
 def add_review(request:HttpRequest, book_id:int):
-    print("masuk ga ya")
     if request.method == 'POST':
         rating = request.POST.get("rating")
         review = request.POST.get("review")
@@ -101,7 +101,6 @@ def show_review(request, book_id):
 
 
 def get_bookreviews_json(request, book_id):
-    print("masuk gaya")
     book = Book.objects.get(pk = book_id)
     review = Review.objects.filter(book=book)
     return HttpResponse(serializers.serialize('json', review))
