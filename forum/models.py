@@ -5,9 +5,8 @@ from booksdatabase.models import Book
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.TextField()
-    text = models.TextField()
-    image = models.ImageField(upload_to='posts/', null=True, blank=True)
+    title = models.TextField(max_length=25)
+    text = models.TextField(max_length=50)
     date_added = models.DateTimeField(auto_now_add=True)
     date_edited = models.DateTimeField(default=timezone.now)
     book = models.ForeignKey(Book, on_delete=models.SET_NULL, null=True, blank=True)

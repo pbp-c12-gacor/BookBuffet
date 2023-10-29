@@ -6,7 +6,6 @@ user = get_user_model()
 class User(models.Model):
     User = models.OneToOneField(user, on_delete=models.CASCADE)
     # profile_picture = models.ImageField() --> ini buat profpic, perlu ga ya
-    isAdmin = False
+
     def __str__(self):
         return self.user.username
-    

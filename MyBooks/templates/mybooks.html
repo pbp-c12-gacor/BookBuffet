@@ -1,38 +1,146 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+<style> 
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
 
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col"></th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Larry</td>
-        <td>the Bird</td>
-        <td>@twitter</td>
-      </tr>
-    </tbody>
-  </table>
+    table, th, td {
+        border: 1px solid #888888;
+    }
 
-  {% endblock content %}
+    th, td {
+        padding: 12px;
+        text-align: center;
+    }
+.bi{
+    color:black;
+
+}
+
+</style>
+
+
+     
+
+
+
+<table class = "table" id ="book_table"></table>
+
+<div id ="tes"></div>
+
+<button onclick = "refreshBooks()"> refresh</button>
+
+
+
+
+<script>
+  async function getBooks(){
+    console.log("testes")
+    return fetch("{% url 'MyBooks:get_mybooks_json' %}").then((res) => res.json())
+  }
+  async function refreshBooks() {
+    console.log("memekkokgabisa")
+      document.getElementById("book_table").innerHTML = ""
+      const mybooks = await getBooks()
+      let htmlString = `<tr>
+          <th>Cover</th>
+          <th>Book</th>
+          <th>Finished Reading</th>
+          <th colspan="3"></th>
+      </tr>`
+      mybooks.forEach((item) => {
+          htmlString += `\n<tr>
+            <td> <img src = /media/${item.fields.cover} alt = "Image"</td>
+          <td><p>${item.fields.title}<p>
+              <a href ="${item.fields.preview_link}">Read Here</a>
+              <p>${item.fields.description}</p>
+            </td>
+<td>
+<button type="button" class="btn btn-primary" id="button_show" onclick = "window.location.href='/MyBooks/show-review/${item.pk}'"> Look at Reviews
+                        </button> 
+            </td>
+          <td><a><button type="button" class="btn btn-primary" id="button_delete" onclick="removeFromCart(${item.pk})">Remove
+                        </button> </a>
+    
+                        </td>
+  `
+
+      })
+      document.getElementById("book_table").innerHTML = htmlString
+
+
+
+
+
+  }
+  refreshBooks()
+
+
+ async function createComment(book_id){
+    console.log("masuk ga aya")
+    fetch(`/MyBooks/add-review-ajax/${book_id}/`, {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            }).then(refreshBooks)
+
+            document.getElementById("form").reset()
+            return false
+        }
+ 
+ function removeFromCart(id) {
+        fetch("{% url 'MyBooks:remove_from_cart' %}", {
+            method: 'DELETE',
+            body: JSON.stringify({
+                'id': id
+            })
+        }).then(refreshBooks)
+    }
+
+
+async function getProducts() {
+        return fetch(`/api/books/`).then((res) => res.json())
+    }
+    async function refreshProducts() {
+        document.getElementById("tes").innerHTML = ""
+        const products = await getProducts()
+        let htmlString = ``
+        products.forEach((item) => {
+                htmlString += `\n
+                  <button onclick = "addProduct(${item.id})">${item.id}</button>`
+            })
+
+        document.getElementById("tes").innerHTML = htmlString
+    }
+    refreshProducts()
+    function coba(){
+      console.log("wow!")
+    }
+
+
+    function addProduct(book_id) {
+        fetch(`create-product-ajax/${book_id}/`, {
+            method: "POST",
+        }).then(refreshProducts)
+
+        return false
+    }
+
+    document.addEventListener('click', function(e) {
+  if (e.target && e.target.id == 'button_add_review') {
+    // Get the book_id from the button's 'data-book-id' attribute
+    var book_id = e.target.getAttribute('data-book-id');
+    createComment(book_id);
+  }
+});
+
+
+
+</script>
+
+{% endblock content %}
+
+

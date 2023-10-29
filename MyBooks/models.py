@@ -5,11 +5,16 @@ from booksdatabase.models import *
 # Create your models here.
 
 class MyBook(models.Model):
-    User = models.ForeignKey(User, on_delete= models.CASCADE)
-    Book = models.ForeignKey(Book, on_delete= models.CASCADE)
-    date_added = models.DateField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete= models.CASCADE)
+    date_added = models.DateField(auto_now_add=True,  null=True, blank=True)
+    books = models.ManyToManyField(Book,related_name='books')
 
 class Review(models.Model):
-    MyBook = models.ForeignKey(MyBook, on_delete= models.CASCADE)
-    review = models.TextField()
-    score = models.IntegerField()
+    user = models.ForeignKey(User, on_delete= models.CASCADE,  null=True, blank=True)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True, blank=True)
+    review = models.TextField(default = "")
+    rating = models.IntegerField(default =0)
+    date_added = models.DateField(auto_now_add=True, null=True, blank=True)
+
+
+

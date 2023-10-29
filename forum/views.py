@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
 from forum.models import Post, User, Comment
 from booksdatabase.models import Book
-from forum.forms import PostForm, CommentForm
+from forum.forms import PostForm, CommentForm, PostEditForm, CommentEditForm
 from django.contrib import messages 
 from django.contrib.auth import logout
 from django.core import serializers
@@ -13,106 +13,131 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-# Create your views here.
 
-def logout_user(request):
-    logout(request)
-    return redirect('forum:login')
+# Create your views here.
 
 def show_forum(request):
     posts = Post.objects.all()
+    formP = PostForm()
+    formPE = PostEditForm()
+    request.COOKIES['authenticated'] = request.user.is_authenticated
     context = {
         'username' : request.user.username,
         'user_id' : request.user.id,
-        'posts' : posts
+        'posts' : posts,
+        'authenticated' : request.COOKIES['authenticated'],
+                'formP' : formP,
+        'formP' : formP,
+        'formPE' : formPE
     }
 
     return render(request, "forum.html", context)
 
 def show_post(request, post_id):
     post = Post.objects.get(pk = post_id)
+    formCE = CommentEditForm()
+    formC = CommentForm()
+    formP = PostForm()
+    formPE = PostEditForm()
+    request.COOKIES['authenticated'] = request.user.is_authenticated
     context = {
         'username' : request.user.username,
         'user_id' : request.user.id,
-        'post_id' : post.pk
+        'post_id' : post.pk,
+        'authenticated' : request.COOKIES['authenticated'],
+        'formC' : formC,
+        'formP' : formP,
+        'formCE' : formCE,
+        'formPE' : formPE
     }
     return render(request, "detail_post.html", context)
 
 def show_mypost(request):
-    posts = Post.objects.filter(user = request.user)
+    request.COOKIES['authenticated'] = request.user.is_authenticated
+    formPE = PostEditForm()
     context = {
-        'username' : request.user.username,
-        'user_id' : request.user.id,
-        'posts' : posts
+        'authenticated' : request.COOKIES['authenticated'],
     }
+    if request.user.is_authenticated:
+        posts = Post.objects.filter(user = request.user)
+        context = {
+            'username' : request.user.username,
+            'user_id' : request.user.id,
+            'posts' : posts,
+            'authenticated' : request.COOKIES['authenticated'],
+            'formPE' : formPE
+        }
     return render(request, "my_post.html", context)
-def logout_user(request):
-    logout(request)
-    response = HttpResponseRedirect(reverse('forum:login'))
-    response.delete_cookie('last_login')
-    return response
 
-def login_user(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            response = HttpResponseRedirect(reverse("forum:show_forum")) 
-            response.set_cookie('last_login', str(datetime.datetime.now()))
-            response.set_cookie('user_id', user.id)
-            return response
-        else:
-            messages.info(request, 'Sorry, incorrect username or password. Please try again.')
-    context = {}
-    return render(request, 'login.html', context)
-
-def register(request):
-    form = UserCreationForm()
-
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Your account has been successfully created!')
-            return redirect('forum:login')
-    context = {'form':form}
-    return render(request, 'register.html', context)
-
-def create_post(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        text = request.POST.get("content")
-        image = request.FILES.get('image')
-        book_id = request.POST.get('book')
-        user = request.user
-        if book_id :
-            book = Book.objects.get(id=book_id)
-        else:
-            book = None
-        new_post = Post(title = title, image=image, text=text, user=user, book=book)
-        new_post.save()
-        return HttpResponse(b"CREATED", status=201)
-
-    return HttpResponseNotFound()
-
+@login_required
 @csrf_exempt
-def edit_post(request,post_id):
-    post = get_object_or_404(Post, pk=post_id)
-    if request.method == 'POST':
-        title = request.POST.get('title-edit')
-        text = request.POST.get('description-edit')
-        image = request.FILES.get('image-edit')
-        post.title = title
-        post.text = text
-        if image is not None:
-            post.image = image
-        post.save()
+def create_post(request):
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES or None)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            if 'book' in form.cleaned_data and form.cleaned_data['book']:
+                post.book = form.cleaned_data['book']
+            else:
+                post.book = None
+            post.save()
+            return HttpResponse(b"CREATED", status=201)
+    else:
+        form = PostForm()
 
-        return HttpResponse(b"UPDATED", status=201)
+    context = {'form': form}
+    return render(request, "forum.html", context)
 
-    return HttpResponseNotFound()
+@login_required
+@csrf_exempt
+def create_comment(request, post_id):
+    if request.method == "POST":
+        form = CommentForm(request.POST or None)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.post = get_object_or_404(Post, id=post_id)
+            comment.save()
+            return HttpResponse(b"CREATED", status=201)
+    else:
+        form = CommentForm()
+
+    context = {'form': form}
+    return render(request, "forum.html", context)
+
+@login_required
+@csrf_exempt
+def edit_post(request, post_id):
+    post = get_object_or_404(Post,id=post_id)
+    if request.method == "POST":
+        form = PostEditForm(request.POST or None, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.save()
+            return HttpResponse(b"UPDATED", status=200)
+    else:
+        # Populate the form with the existing post instance
+        form = PostEditForm(instance=post)
+
+    context = {'form': form}
+    return render(request, "forum.html", context)
+
+@login_required
+@csrf_exempt
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.method == "POST":
+        form = CommentEditForm(request.POST or None, instance=comment)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.save()
+            return HttpResponse(b"UPDATED", status=200)
+    else:
+        form = PostForm(instance=comment)
+
+    context = {'form': form}
+    return render(request, "forum.html", context)
 
 def get_post(request):
     if request.method == 'GET':
@@ -133,35 +158,7 @@ def get_post_by_id(request, post_id):
         return HttpResponse(serializers.serialize("json", [post]), content_type="application/json")
     
 
-def create_comment(request, post_id):
-    if request.method == 'POST':
-        text = request.POST.get("content")
-        post = get_object_or_404(Post, id=post_id)
-        user = request.user
-
-        # Create the comment
-        comment = Comment(text=text, post=post, user=user)
-        comment.save()
-
-        return HttpResponse(b"CREATED", status=201)
-
-    return HttpResponseNotFound()
-
-def create_reply(request, comment_id):
-    parent_comment = get_object_or_404(Comment, id=comment_id)
-    form = CommentForm(request.POST or None)
-
-    if request.method == "POST" and form.is_valid():
-        reply = form.save(commit=False)
-        reply.user = request.user
-        reply.post = parent_comment.post
-        reply.parent = parent_comment
-        reply.save()
-        return redirect('forum:show_forum')
-
-    context = {'form': form}
-    return render(request, "create_reply.html", context)
-
+@login_required
 @csrf_exempt
 def delete_post(request, post_id):
     if request.method == "DELETE":
@@ -170,6 +167,7 @@ def delete_post(request, post_id):
         return HttpResponse(b"DELETED", status=201)
     return HttpResponseNotFound()
 
+@login_required
 @csrf_exempt
 def delete_comment(request, comment_id):
     if request.method == "DELETE":
@@ -182,8 +180,12 @@ def get_user_by_id(request, user_id):
     user = User.objects.filter(id=user_id)
     return HttpResponse(serializers.serialize("json", user), content_type="application/json")
 
-def get_comments_by_id(request, post_id):
+def get_comments_by_post_id(request, post_id):
     post = Post.objects.get(pk=post_id)
     comments = post.comments.all()
     return HttpResponse(serializers.serialize("json", comments), content_type="application/json")
+
+def get_comment_by_id(request, comment_id):
+    comment = Comment.objects.get(pk=comment_id)
+    return HttpResponse(serializers.serialize("json", [comment]), content_type="application/json")
 
