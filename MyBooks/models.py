@@ -6,7 +6,7 @@ from booksdatabase.models import *
 
 class MyBook(models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE)
-    date_added = models.DateField(auto_now_add=True)
+    date_added = models.DateField(auto_now_add=True,  null=True, blank=True)
     books = models.ManyToManyField(Book,related_name='books')
 
 class Review(models.Model):
@@ -14,6 +14,7 @@ class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True, blank=True)
     review = models.TextField(default = "")
     rating = models.IntegerField(default =0)
+    date_added = models.DateField(auto_now_add=True, null=True, blank=True)
 
 
 

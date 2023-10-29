@@ -23,7 +23,7 @@
 
 </style>
 
-                 <!-- <div><img src="{% static '/images/product-1.png' %}" class="card-img-top planner w-25" style="min-width: 120px;" ></div> -->
+
      
 
 
@@ -36,8 +36,7 @@
 
 
 
-<h4 type="button" class="btn text-dark border-0 fs-6 w-100 m-0 text-start" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-fill text-dark"></i> Edit</h4>   
-<div><i style="color: black;" class="bi bi-star-fill"></i></div>
+
 <script>
   async function getBooks(){
     console.log("testes")
@@ -60,45 +59,7 @@
               <a href ="${item.fields.preview_link}">Read Here</a>
               <p>${item.fields.description}</p>
             </td>
-          <td>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Add a Review</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="form" onsubmit="return false;">
-                    {% csrf_token %}
-                    <select id ="rating" name = "rating" class="form-select" aria-label="Default select example">
-                        <option value="0"  selected>Pick a Rating</option>
-                        <option value="1">⭐
-                        </option>
-                        <option value="2">⭐⭐
-                        </option>
-                        <option value="3">⭐⭐⭐
-                        </option>
-                        <option value="4">⭐⭐⭐⭐
-                        </option>
-                        <option value="5">⭐⭐⭐⭐⭐
-                        </option>
-                      </select>
-                    <div class="mb-3">
-                        <label for="review" class="col-form-label">comment</label>
-                        <textarea class="form-control" id="review" name="review"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="button_add_review" data-book-id="${item.pk}"  data-bs-dismiss="modal">Add Review</button>
-
-            </div>
-        </div>
-    </div>
-</div>
-<h4 type="button" class="btn text-dark border-0 fs-6 w-100 m-0 text-start" data-bs-toggle="modal" id="button_leave_review" data-bs-target="#exampleModal"><i class="bi bi-pencil-fill text-dark"></i>Leave a Review</h4>
+<td>
 <button type="button" class="btn btn-primary" id="button_show" onclick = "window.location.href='/MyBooks/show-review/${item.pk}'"> Look at Reviews
                         </button> 
             </td>
@@ -107,7 +68,7 @@
     
                         </td>
   `
- 
+
       })
       document.getElementById("book_table").innerHTML = htmlString
 
@@ -174,9 +135,6 @@ async function getProducts() {
     var book_id = e.target.getAttribute('data-book-id');
     createComment(book_id);
   }
-
-
-
 });
 
 

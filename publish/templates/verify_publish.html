@@ -2,8 +2,126 @@
 
 {% block content %}
 
-<h1>INI HALAMAN VERIFY PUBLISHES</h1>
+<style>
+    .publish-card {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px;
+        display: flex;
+        flex-direction: column;
+    }
 
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+    }
 
+    .verify-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        cursor: pointer;
+    }
+</style>
+
+<h1 style="text-align: center;">Books to Verify</h1>
+<div id="publishList"></div>
+
+<script>
+    function deleteAllPublish() {
+        fetch('/publish/delete-all-publish/', {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (response.status === 201) {
+                    alert('Publish data deleted successfully.');
+                } else {
+                    alert('An error occurred while deleting publish data.');
+                }
+                })
+                .catch(error => {
+                alert('An error occurred while processing the request.');
+                console.error(error);
+            });
+    }
+
+    async function createPublishCard(publish) {
+        const card = document.createElement('div');
+        card.classList.add('publish-card');
+
+        // Check if cover exists and add it to the card
+        if (publish.fields.cover) {
+            const img = document.createElement('img');
+            img.src = `/media/${publish.fields.cover}`;
+            img.alt = publish.fields.title + ' Cover';
+            img.style.maxWidth = '200px';
+            card.appendChild(img);
+        }
+
+        const title = document.createElement('p');
+        title.innerHTML = `<strong>Title:</strong> ${publish.fields.title}`;
+        card.appendChild(title);
+
+        const publisher = document.createElement('p');
+        publisher.innerHTML = `<strong>Publisher:</strong> ${publish.fields.publisher}`;
+        card.appendChild(publisher);
+
+        const publishedDate = document.createElement('p');
+        const rawDate = new Date(publish.fields.date_added);
+        const formattedDate = `${rawDate.getFullYear()}-${(rawDate.getMonth() + 1).toString().padStart(2, '0')}-${rawDate.getDate().toString().padStart(2, '0')}`;
+        publishedDate.innerHTML = `<strong>Submission Date:</strong> ${formattedDate}`;
+        card.appendChild(publishedDate);
+
+        const submittedBy = document.createElement('p');
+        const user = await getUser(publish.pk);
+        if (user.username) {
+            submittedBy.innerHTML = `<strong>Submitted By:</strong> ${user.username}`;
+        }
+        card.appendChild(submittedBy);
+
+        const buttonContainer = document.createElement('div');
+        buttonContainer.classList.add('button-container');
+
+        const verifyButton = document.createElement('button');
+        verifyButton.classList.add('verify-button');
+        verifyButton.innerText = 'Verify';
+        verifyButton.addEventListener('click', () => {
+            const publishId = publish.pk; 
+            window.location.href = `/publish/show-publish-detail/${publishId}/`;
+        });
+        buttonContainer.appendChild(verifyButton);
+
+        card.appendChild(buttonContainer);
+
+        return card;
+    }
+
+    async function getUnverifiedPublish() {
+        return fetch('/publish/get-unverified-publish/').then(response => response.json())
+    }
+
+    async function getUser(id) {
+        return fetch(`/publish/get-user/${id}`).then(response => response.json())
+    }
+
+    async function refreshUnverifiedPublish() {
+        const data = await getUnverifiedPublish();
+        const publishList = document.getElementById('publishList');
+        publishList.innerHTML = '';
+
+        if (data.length > 0) {
+            for (const publish of data) {
+                const card = await createPublishCard(publish);
+                publishList.appendChild(card);
+            }
+        } else {
+            publishList.innerHTML = '<p>There is nothing you need to verify</p>';
+        }
+    }
+
+    refreshUnverifiedPublish();
+
+</script>
 
 {% endblock content %}

@@ -31,8 +31,8 @@ class PublishForm(ModelForm):
         required=True
     )
 
-    published_date = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date', 'class': 'custom-width'}),
+    published_date = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'custom-width'}),
         required=False
     )
 
