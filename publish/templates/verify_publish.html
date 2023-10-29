@@ -4,24 +4,59 @@
 
 <style>
     .publish-card {
-        border: 1px solid #ccc;
+        border: 1px solid white;
+        width: 50vw;
         padding: 10px;
-        margin: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+        background-color: white;
+        border-radius: 10px;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        justify-content: center;
         display: flex;
         flex-direction: column;
+        margin: auto;
+        padding: 10px;
+    }
+
+    .text-container {
+        padding: 5px;
+    }
+
+    .text-container p {
+        margin-top: 10px; 
     }
 
     .button-container {
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
+        padding: 10px;
     }
 
     .verify-button {
-        background-color: #007bff;
+        background-color: #c5a992;
         color: #fff;
         border: none;
         padding: 8px 16px;
         cursor: pointer;
+    }
+
+    #publishList {
+        border-radius: 20px;
+        border-color: transparent;
+        margin-left: 50px;
+        margin-right: 50px;
+        margin-top: 20px;
     }
 </style>
 
@@ -116,7 +151,7 @@
                 publishList.appendChild(card);
             }
         } else {
-            publishList.innerHTML = '<p>There is nothing you need to verify</p>';
+            publishList.innerHTML = '<h2 style="text-align: center;">There is nothing you need to verify</h2>';
         }
     }
 
