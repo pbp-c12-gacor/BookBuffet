@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+<style>
+    th, td {
+        text-align: center;
+        border: 2px solid #2f2f2f;
+        color: #757575;
+        background-color: white;
+    }
+
+    th {
+        background-color: #C5A992;
+        color: white;
+    }
+
+    th:first-child,
+    td:first-child {
+        padding-left: 15px;
+    }
+
+    th:last-child,
+    td:last-child {
+        padding-right: 15px;
+    }
+
+    table.align-center {
+        display: table;
+        margin: auto;
+        border-radius: 25px;
+        border-collapse: collapse;
+        backdrop-filter: blur(2px)
+    }
+</style>
+
+<br>
+
+<table class="align-center">
+    <tr>
+        <th>Username</th>
+        <th>Book's Title</th>
+        <th>Description</th>
+        <th>Date Added</th>
+        <th>Option</th>
+    </tr>
+    {% for report in reports %}
+        <tr>
+            <td>{{report.user}}</td>
+            <td>{{report.book.title}}</td>
+            <td>{{report.comment}}</td>
+            <td>{{report.date_added}}</td>
+            <td><a href="{% url 'report:delete_report' report.pk %}">
+                <button>
+                    Delete
+                </button>
+            </a></td>
+        </tr>
+    {% endfor %}
+</table>
+
+<br>
+{% endblock content %}

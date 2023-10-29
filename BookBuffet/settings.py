@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "booksdatabase",
     "rest_framework",
     "publish",
+    "catalog",
 ]
 
 MIDDLEWARE = [
@@ -127,7 +128,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    BASE_DIR / 'appname' / 'static',
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

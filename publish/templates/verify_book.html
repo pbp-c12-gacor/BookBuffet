@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<script>
+    async function getPublishById(id){
+        return fetch(`/publish/get-publish/${id}/`).then((res) => res.json());
+    }
+</script>
+
+{% endblock content %}
