@@ -23,9 +23,7 @@ def register(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
         if form.is_valid():
-            print("masuk valid")
             if form.cleaned_data['isAdmin'] == "True":
-                print("masuk true")
                 referral_code = form.cleaned_data['referral_code']
                 if referral_code != "PBPC12GACORMAXWIN":
                     messages.error(request, 'Invalid referral code for Admin registration.')
@@ -34,15 +32,12 @@ def register(request):
                 user.is_staff = True
                 user.save()
             else:
-                print("masuk false")
                 user = form.save(commit=False)
                 user.is_staff = False
                 user.save()
 
             messages.success(request, 'Your account has been successfully registered!')
             return redirect('main:login')
-        else:
-            print(form.errors)
     context = {'form': form}
     return render(request, 'register.html', context)
 

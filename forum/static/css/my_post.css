@@ -1,0 +1,174 @@
+#category-button {
+  min-height: 50px;
+}
+#catgories-list {
+  max-height: 150px;
+  overflow-y: auto;
+}
+#my-input {
+  background: #f1f1f1;
+}
+#category-selected {
+  min-height: 50px;
+}
+#category {
+  cursor: pointer;
+}
+#category-name {
+  color: gray;
+}
+#cancel-select {
+  color: gray;
+  -webkit-text-stroke: 2px;
+  cursor: pointer;
+}
+article {
+  cursor: pointer;
+}
+#t-dot {
+  width: auto;
+  height: auto;
+}
+#option {
+  width: auto;
+}
+span {
+  color: gray;
+}
+#com-icon {
+  color: grey;
+}
+#com-count {
+  color: gray;
+}
+#post-text {
+  font-size: 16px;
+}
+#post-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+#cat-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  #sub-container {
+    width: 100%;
+  }
+  username {
+    font-size: 1em;
+  }
+  #time-dif {
+    font-size: 2em;
+  }
+  #cat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  #sub-container {
+    width: 100%;
+  }
+  username {
+    font-size: 1em;
+  }
+  #time-dif {
+    font-size: 2em;
+  }
+  #cat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .dropdown {
+    order: 1;
+  }
+
+  #category-selected {
+    order: 2;
+    min-height: 50px; /* Atur tinggi minimum sesuai kebutuhan Anda */
+  }
+
+  #posts {
+    order: 3;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  #sub-container {
+    width: 100%;
+  }
+  username {
+    font-size: 1em;
+  }
+  #time-dif {
+    font-size: 2em;
+  }
+  #cat-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .dropdown {
+    order: 1;
+  }
+
+  #category-selected {
+    order: 2;
+    min-height: 50px;
+  }
+
+  #posts {
+    order: 3;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  #sub-container {
+    width: 75%;
+  }
+  username {
+    font-size: 1em;
+  }
+  #time-dif {
+    font-size: 2em;
+  }
+  #cat-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  #sub-container {
+    width: 75%;
+  }
+  username {
+    font-size: 1em;
+  }
+  #time-dif {
+    font-size: 2em;
+  }
+  #cat-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}

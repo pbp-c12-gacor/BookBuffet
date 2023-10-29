@@ -1,0 +1,200 @@
+textarea {
+  height: 150px;
+}
+#upload-button {
+  cursor: pointer;
+  color: gray;
+}
+#categories-list {
+  max-height: 150px;
+  overflow-y: auto;
+}
+#my-input {
+  background: #f1f1f1;
+}
+#book-list {
+  max-height: 150px;
+  overflow-y: scroll;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+#category {
+  cursor: pointer;
+}
+#category-selected {
+  max-height: 50px;
+}
+#category-name {
+  color: gray;
+}
+#cancel-select {
+  color: gray;
+  -webkit-text-stroke: 2px;
+  cursor: pointer;
+}
+article {
+  cursor: pointer;
+}
+span {
+  color: gray;
+}
+#t-dot {
+  width: auto;
+  height: auto;
+}
+#option {
+  width: auto;
+}
+#com-icon {
+  color: grey;
+}
+#com-count {
+  color: gray;
+}
+#book-title {
+  color: gray;
+}
+#cancel-upload-book {
+  color: gray;
+  -webkit-text-stroke: 1px;
+  cursor: pointer;
+}
+#cancel-upload-image {
+  color: gray;
+  -webkit-text-stroke: 1px;
+  cursor: pointer;
+}
+#time-dif {
+  font-size: 10em;
+}
+#post-text {
+  font-size: 16px;
+}
+#post-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+#form-post {
+  padding-bottom: 50px; /* Sesuaikan nilai ini sesuai kebutuhan */
+}
+#cat-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  #sub-container {
+    width: 100%;
+  }
+  #username {
+    font-size: 14px;
+  }
+  #time-dif {
+    font-size: 2em;
+  }
+  #cat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .dropdown {
+    order: 1;
+  }
+
+  #category-selected {
+    order: 2;
+    min-height: 50px; /* Atur tinggi minimum sesuai kebutuhan Anda */
+  }
+
+  #posts {
+    order: 3;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  #sub-container {
+    width: 100%;
+  }
+  #username {
+    font-size: 14px;
+  }
+  #time-dif {
+    font-size: 2em;
+  }
+  #cat-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .dropdown {
+    order: 1;
+  }
+
+  #category-selected {
+    order: 2;
+    min-height: 50px;
+  }
+
+  #posts {
+    order: 3;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  #sub-container {
+    width: 100%;
+  }
+  #username {
+    font-size: 17px;
+  }
+  #time-dif {
+    font-size: 2em;
+  }
+  #cat-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  #sub-container {
+    width: 75%;
+  }
+  #username {
+    font-size: 17px;
+  }
+  #time-dif {
+    font-size: 2em;
+  }
+  #cat-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  #sub-container {
+    width: 75%;
+  }
+  #username {
+    font-size: 17px;
+  }
+  #cat-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}

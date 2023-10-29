@@ -1,4 +1,4 @@
-from django.forms import ModelChoiceField, ModelForm, Select, Textarea, TextInput, ValidationError, CharField
+from django.forms import ModelForm, Textarea, TextInput, ValidationError, CharField
 from report.models import Report
 from booksdatabase.models import Book
 
@@ -7,12 +7,14 @@ class ReportForm(ModelForm):
         model = Report
         fields = ['book_title', 'comment']
     
+    # Untuk Book Title
     book_title = CharField(
-        widget=TextInput(attrs={'placeholder': 'Your Book Title'}),
+        widget=TextInput(attrs={'placeholder': 'Type Book\'s Title here'}),
         required= True
     )
+    # Untuk comment pengguna
     comment = CharField(
-        widget=Textarea(attrs={'placeholder': 'Your Comment'}),
+        widget=Textarea(attrs={'placeholder': 'Type your comment here'}),
         required= True
     )
 
