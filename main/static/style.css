@@ -402,6 +402,57 @@ img {
   vertical-align: middle;
 }
 
+/* for image */
+
+#logo{
+  text-align: center;
+}
+
+@media only screen and (min-width: 300px) {
+  img {
+    display: inline-block;
+    border: 0;
+    max-width: 40%;
+    height: auto;
+    justify-content: center;
+  }
+  a {
+    justify-self: flex-end;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  img {
+    display: inline-block;
+    border: 0;
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  img {
+    display: inline-block;
+    border: 0;
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+  }
+}
+
+/* @media only screen and (min-width: 1200px) {
+  img {
+    display: inline-block;
+    border: 0;
+    max-width: 100px;
+    height: auto;
+    vertical-align: middle;
+  } */
+/* } */
+
+/* end for image */
+
 ::selection {
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
@@ -2454,3 +2505,5 @@ footer#footer {
     width: 100%;
   }
 }
+
+
