@@ -75,6 +75,11 @@
                 </div>
 
 
+
+   
+
+
+
 <script>
     const book_id ="{{book.id}}"
     const mybook = "{{mybook}}"
@@ -122,6 +127,7 @@
                 
                     `
 
+
             } else if (mybook == "kosong"){
                 htmlString += `<button  id="add_my_books" data-book-id="${book_id}"  onclick = "addProduct(${book_id})">Add to My Books</button>`
             }
@@ -135,12 +141,14 @@
         }
         refreshReview()
 
+
         function deleteReview(book_id) {
             fetch(`delete-review/${book_id}/`, {
                 method: 'DELETE'
             }).then(refreshReview).then(refreshReviews)
             return false
         }
+
 
         async function refreshReviews() {
             const reviews = await getReviews()
@@ -207,6 +215,7 @@
         }).then(refreshReview).then(refreshReviews)
         return false
     }
+
 
 
 

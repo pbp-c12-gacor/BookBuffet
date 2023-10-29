@@ -41,12 +41,15 @@ def remove_from_cart(request):
         book_id = json.loads(request.body).get('id')
         user = request.user
         my_book, created = MyBook.objects.get_or_create(user=user)
+
         try:
             review = Review.objects.filter(user= user).get(book = book_id)
             review.delete()
         except:
             review = None
+
         book = Book.objects.get(id= book_id)
+        review.delete()
         my_book.books.remove(book)
         return HttpResponse(b"DELETED", 201)
 
@@ -76,11 +79,13 @@ def add_review(request:HttpRequest, book_id:int):
 @csrf_exempt
 def show_review(request, book_id):  
     book = Book.objects.get(id = book_id)
+
     user = request.user
     try:
         mybook = MyBook.objects.filter(user=user).get(books=book)
     except:
         mybook = "kosong"
+
     review = Review.objects.filter(book=book)
     review_form= ReviewForm(request.POST or None)
     average_rating = Review.objects.filter(book = book).aggregate(Avg("rating"))["rating__avg"] or 0

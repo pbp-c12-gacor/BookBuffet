@@ -5,42 +5,22 @@
 <header id="header">
     <body>
         <div class="container-fluid  d-flex align-items-center">
-            <div class="row">
+            <div class="row flex-column flex-md-row">
     
-                <div class="col-md-2  d-flex align-items-center">
-                    <div class="main-logo  ">
-                        <a href="/"><img src="/static/images/logo-book-buffet.png" alt="logo"></a>
+                <div class="col-md-2 col-12 d-flex align-items-center justify-content-center">
+                    <div class="main-logo d-flex justify-content-center">
+                        <a href="/" id="logo"><img src="/static/images/logo-book-buffet.png" alt="logo"></a>
                     </div>
-    
                 </div>
-    
-                <div class="col-md-10 ">
+                <div class="col-md-10 col-12 ">
     
                     <nav id="navbar">
                         <div class="main-menu stellarnav  ">
                             <ul class="menu-list">
 
-                                <li class="menu-item active"><a href="/" id="home">Home</a></li>
-
+                                <li class="menu-item"><a href="/" id="home">Home</a></li>
                                 <li class="menu-item has-sub">
-                                    <a href="#pages" class="nav-link">Explore</a>
-    
-                                    <ul>
-                                        <li class="active"><a href="index.html">Home</a></li>
-                                        <li><a href="about.html">About <span class="badge bg-dark">PRO</span></a></li>
-                                        <li><a href="styles.html">Styles <span class="badge bg-dark">PRO</span></a></li>
-                                        <li><a href="blog.html">Blog <span class="badge bg-dark">PRO</span></a></li>
-                                        <li><a href="single-post.html">Post Single <span class="badge bg-dark">PRO</span></a></li>
-                                        <li><a href="shop.html">Our Store <span class="badge bg-dark">PRO</span></a></li>
-                                        <li><a href="single-product.html">Product Single <span class="badge bg-dark">PRO</span></a></li>
-                                        <li><a href="contact.html">Contact <span class="badge bg-dark">PRO</span></a></li>
-                                        <li><a href="thank-you.html">Thank You <span class="badge bg-dark">PRO</span></a></li>
-                                    </ul>
-    
-                                </li>
-
-                                <li class="menu-item has-sub">
-                                    <a href="/publish/" class="nav-link">Publish a Book</a>
+                                    <a id="publish" href="/publish/" class="nav-link">Publish a Book</a>
                                     <ul>
                                         <li><a href="/publish/">Publish a Book</a></li>
                                         <li><a href="/publish/my-publish">My Publish</a></li>
@@ -49,7 +29,7 @@
                                 </li>
 
                                 <li class="menu-item has-sub">
-                                    <a href="/forum/" class="nav-link">Forum</a>
+                                    <a id="forum" href="/forum/" class="nav-link">Forum</a>
                                     <ul>
                                         <li ><a href="/forum/">Forum</a></li>
                                         <li ><a href="/forum/mypost/">My Post</a></li>
@@ -57,9 +37,7 @@
                                     </ul>
     
                                 </li>
-                                <li class="menu-item"><a href="/MyBooks/" class="nav-link" id = "MyBooks">My Books</a></li>
-
-    
+                                <li id="MyBook" class="menu-item"><a href="/MyBooks/" class="nav-link" id = "MyBooks">My Books</a></li>
                                 <li class="menu-item has-sub">
                                     <a href="#pages" class="nav-link"><i class="icon icon-user"></i></a>
                                     <ul>
@@ -101,7 +79,6 @@
             const activePage = window.location.pathname;
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
-                
             })
             if (activePage == "/"){
                 document.getElementById('home').classList.add('active');
