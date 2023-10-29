@@ -354,15 +354,15 @@
     "model": "booksdatabase.book",
     "pk": 16,
     "fields": {
-        "title": "Albert Einstein : The Genius Who Failed School - Biography Book Best Sellers | Children's Biography Books",
-        "subtitle": "",
+        "title": "Albert Einstein",
+        "subtitle": "The Genius Who Failed School - Biography Book Best Sellers",
         "publisher": "Speedy Publishing LLC",
         "published_date": 2017,
         "description": "Albert Einstein lived a very interesting life. When he was young, his teacher said that he would never be anything great because he was stupid. We all know how wrong his teacher was because Einstein grew to formulate the most complex of all theories. Einstein’s story would tell us to never give up. Read and learn from his biography today!",
         "page_count": 64,
         "language": "en",
         "preview_link": "http://books.google.com/books?id=PM84DwAAQBAJ&printsec=frontcover&dq=Albert+Einstein+:+The+Genius+Who+Failed+School&hl=&cd=2&source=gbs_api",
-        "cover": "",
+        "cover": "covers/16.jpg",
         "isbn_10": "1541919939",
         "isbn_13": "9781541919938",
         "authors": [
