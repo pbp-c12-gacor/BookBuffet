@@ -63,15 +63,17 @@ class PublishForm(ModelForm):
 
     cover = forms.ImageField(
         widget=forms.FileInput(attrs={'accept': 'image/*', 'class': 'custom-width'}),
-        required=False
+        required=False,
     )
 
     isbn_10 = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': 'ISBN-10', 'class': 'custom-width'}),
-        required=False
+        required=False,
+        label="ISBN 10"
     )
 
     isbn_13 = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': 'ISBN-13', 'class': 'custom-width'}),
-        required=False
+        required=False,
+        label="ISBN 13"
     )

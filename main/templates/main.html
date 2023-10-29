@@ -48,38 +48,23 @@
 										you’ll go. The more you explore here, the more that you will experience.”</q>
 								</blockquote>
 								<div class="btn-wrap">
-									<a href="/booksdatabase/" class="btn btn-outline-accent btn-accent-arrow">Explore</a>
+									<a href="/catalog/" class="btn btn-outline-accent btn-accent-arrow">Explore</a>
 								</div>
 							</div><!--banner-content-->
 						</div><!--slider-item-->
 
+						{% for book in top_books %}
 						<div class="slider-item">
 							<div class="banner-content">
-								<h2 class="banner-title">Life of the Wild</h2>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu feugiat amet, libero
-									ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis
-									urna, a eu.</p>
+								<h2 class="banner-title">{{ book.title }}</h2>
+								<p>{{ book.subtitle }}</p>
 								<div class="btn-wrap">
-									<a href="#" class="btn btn-outline-accent btn-accent-arrow">Read More<i
-											class="icon icon-ns-arrow-right"></i></a>
+									<a href="/catalog/" class="btn btn-outline-accent btn-accent-arrow">See Details</a>
 								</div>
 							</div><!--banner-content-->
-							<img src="/static/images/main-banner1.jpg" alt="banner" class="banner-image">
+							<img src="/media/{{ book.cover }}" alt="banner" class="banner-image">
 						</div><!--slider-item-->
-
-						<div class="slider-item">
-							<div class="banner-content">
-								<h2 class="banner-title">Birds gonna be Happy</h2>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu feugiat amet, libero
-									ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis
-									urna, a eu.</p>
-								<div class="btn-wrap">
-									<a href="#" class="btn btn-outline-accent btn-accent-arrow">Read More<i
-											class="icon icon-ns-arrow-right"></i></a>
-								</div>
-							</div><!--banner-content-->
-							<img src="/static/images/main-banner2.jpg" alt="banner" class="banner-image">
-						</div><!--slider-item-->
+						{% endfor %}
 
 					</div><!--slider-->
 
@@ -159,7 +144,7 @@
 				</div>
 				<h3>Book Catalogue</h3>
 				<p>Explore through our vast of book collections to find the one best suited to you. You can access all the details about any book in BookBuffet and can add it to your My Books</p>
-				<a href="/booksdatabase/" class="readmore stretched-link">Explore<i class="bi bi-arrow-right"></i></a>
+				<a href="/catalog/" class="readmore stretched-link">Explore<i class="bi bi-arrow-right"></i></a>
 			  </div>
 			</div><!-- End Service Item -->
   
@@ -178,7 +163,7 @@
 
 					<div class="section-header align-center">
 						<div class="title">
-							<span>Some quality items</span>
+							<span>Random Picks</span>
 						</div>
 						<h2 class="section-title">Featured Books</h2>
 					</div>
@@ -186,61 +171,21 @@
 					<div class="product-list" data-aos="fade-up">
 						<div class="row">
 
+							{% for book in random_picks %}
 							<div class="col-md-3">
 								<div class="product-item">
 									<figure class="product-style">
-										<img src="/static/images/product-item1.jpg" alt="Books" class="product-item">
-										<button type="button" class="add-to-cart" data-product-tile="add-to-cart">See Details</button>
+										<img src="/media/{{ book.cover }}" alt="Books" class="product-item">
+										<button type="button" class="add-to-cart" data-product-tile="add-to-cart" onclick="location.href='/catalog/'">See Details</button>
 									</figure>
 									<figcaption>
-										<h3>Simple way of piece life</h3>
-										<span>Armor Ramsey</span>
-										<div class="item-price">$ 40.00</div>
+										<h3>{{ book.title }}</h3>
+										<span>{{ book.authors.first }}{% if book.authors.count > 1 %} et al.{% endif %}</span>
+										<div class="item-price">&#11088; {{ book.average_rating }}</div>
 									</figcaption>
 								</div>
 							</div>
-
-							<div class="col-md-3">
-								<div class="product-item">
-									<figure class="product-style">
-										<img src="/static/images/product-item2.jpg" alt="Books" class="product-item">
-										<button type="button" class="add-to-cart" data-product-tile="add-to-cart">See Details</button>
-									</figure>
-									<figcaption>
-										<h3>Great travel at desert</h3>
-										<span>Sanchit Howdy</span>
-										<div class="item-price">$ 38.00</div>
-									</figcaption>
-								</div>
-							</div>
-
-							<div class="col-md-3">
-								<div class="product-item">
-									<figure class="product-style">
-										<img src="/static/images/product-item3.jpg" alt="Books" class="product-item">
-										<button type="button" class="add-to-cart" data-product-tile="add-to-cart">See Details</button>
-									</figure>
-									<figcaption>
-										<h3>The lady beauty Scarlett</h3>
-										<span>Arthur Doyle</span>
-										<div class="item-price">$ 45.00</div>
-									</figcaption>
-								</div>
-							</div>
-
-							<div class="col-md-3">
-								<div class="product-item">
-									<figure class="product-style">
-										<img src="/static/images/product-item4.jpg" alt="Books" class="product-item">
-										<button type="button" class="add-to-cart" data-product-tile="add-to-cart">See Details</button>
-									</figure>
-									<figcaption>
-										<h3>Once upon a time</h3>
-										<span>Klien Marry</span>
-										<div class="item-price">$ 35.00</div>
-									</figcaption>
-								</div>
-							</div>
+							{% endfor %}
 
 						</div><!--ft-books-slider-->
 					</div><!--grid-->
@@ -253,7 +198,7 @@
 				<div class="col-md-12">
 
 					<div class="btn-wrap align-right">
-						<a href="/booksdatabase/" class="btn-accent-arrow">View all products <i
+						<a href="/catalog/" class="btn-accent-arrow">View all books <i
 								class="icon icon-ns-arrow-right"></i></a>
 					</div>
 
@@ -267,7 +212,7 @@
 			<h2 class="section-title divider">Quote of the day</h2>
 			<blockquote data-aos="fade-up">
 				<q>“Hobi Literasi kata mama IPK nya nanti 4.0”</q>
-				<div class="author-name">Albert Einstein</div>
+				<div class="author-name">Pras Einstein</div>
 			</blockquote>
 		</div>
 	</section>

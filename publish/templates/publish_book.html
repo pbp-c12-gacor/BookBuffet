@@ -15,6 +15,10 @@
     }
 </style>
 
+<h1 style="text-align: center;">
+    Publish Your Book Here!
+</h1>
+
 <form class="p-1" id="publish-form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     
@@ -94,16 +98,16 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="successModalLabel">Submission Successful</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <h3 class="modal-title" id="successModalLabel"><strong>Submission Successful</strong></h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="size: 50px; border-radius: 10px;">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          Your submission has been successfully published.
+          Submission has been successfully published.
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius: 10px;">Close</button>
         </div>
       </div>
     </div>
