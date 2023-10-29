@@ -4,7 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <title>BookSaw - Free Book Store HTML CSS Template</title>
+    <title>Register to Book Buffet</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,15 +37,23 @@
 
 <style>
     .showcase {
+        display: grid;
+        place-items: center;
+    }
+
+    .login {
         text-align: center;
     }
+
+    .button {
+        display: grid;
+        place-items: center;
+    }
+
     body {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        margin: 0;
-        overflow: auto;
     }
 </style>
 
@@ -56,7 +64,7 @@
         <form method="POST">
             {% csrf_token %}
             {{ form.as_table }}
-            <div>
+            <div class="button">
                 <input class="register-button" type="submit" name="submit" value="Sign Up"/>
             </div>
     
