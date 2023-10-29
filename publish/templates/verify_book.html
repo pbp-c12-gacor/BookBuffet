@@ -2,6 +2,12 @@
 
 {% block content %}
 
-<h1>INI HALAMAN VERIFY BOOK</h1>
+
+
+<script>
+    async function getPublishById(id){
+        return fetch(`/publish/get-publish/${id}/`).then((res) => res.json());
+    }
+</script>
 
 {% endblock content %}

@@ -4,4 +4,10 @@
 
 <h1>PUBLISHED BOOK</h1>
 
+<script>
+    async function getPublishByUser(user){
+        return fetch(`/publish/get-publish/`).then((res) => res.json());
+    }
+</script>
+
 {% endblock content %}
