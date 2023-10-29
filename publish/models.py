@@ -10,7 +10,7 @@ class Publish(models.Model):
     subtitle = models.TextField(null=True, blank=True)
     authors = models.ManyToManyField(Author, related_name="published_books")
     publisher = models.CharField(max_length=255, null=True, blank=True)
-    published_date = models.DateField(null=True, blank=True)
+    published_date = models.IntegerField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     page_count = models.IntegerField(null=True, blank=True)
     categories = models.ManyToManyField(Category, related_name="published_books")

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-
+{% block content %}
 
 <style>
     .input-container {
@@ -110,13 +110,6 @@
   </div>
 
 <script>
-    async function getPublishById(id){
-        return fetch(`/publish/get-publish/${id}/`).then((res) => res.json());
-    }
-
-    async function getPublishByUser(user){
-        return fetch(`/publish/get-publish/`).then((res) => res.json());
-    }
 
     document.querySelector('#publish-form').addEventListener('submit', async (e) => {
         e.preventDefault(); // Prevent the default form submission

@@ -19,6 +19,32 @@
     })
   });
 
+  $(document).ready(function (){
+    const activePage = window.location.pathname;
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        
+    })
+    if (activePage == "/"){
+        document.getElementById('home').classList.add('active');
+
+    } else if(activePage.includes( "/forum/")){
+        document.getElementById('forum').classList.add('active');
+    } else if(activePage.includes( "/MyBooks/")){
+        document.getElementById('MyBook').classList.add('active');
+    } else if(activePage.includes( "/publish/")){
+        document.getElementById('publish').classList.add('active');
+    }  else if(activePage.includes( "/report/")){
+        document.getElementById('report').classList.add('active');
+    } else if(activePage.includes( "/bookdatabase")){
+        document.getElementById('bookdatabase').classList.add('active');
+
+    }
+    
+
+})
+
+
   // Responsive Navigation with Button
 
   const hamburger = document.querySelector(".hamburger");
@@ -43,10 +69,11 @@
   var initScrollNav = function() {
     var scroll = $(window).scrollTop();
 
-    if (scroll >= 200) {
+    if (scroll >= 80) {
       $('#header').addClass("fixed-top");
     }else{
       $('#header').removeClass("fixed-top");
+      $('#header').addClass("fade-in");
     }
   }
 

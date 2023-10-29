@@ -79,6 +79,7 @@ document
       .querySelector("#cancel-upload-book")
       .addEventListener("click", function () {
         document.getElementById("book-selected").value = "";
+        document.getElementById("form1").value = "";
         document.getElementById("upload-status-book").innerHTML = "";
       });
   });

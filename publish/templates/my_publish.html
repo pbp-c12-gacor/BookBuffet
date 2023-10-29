@@ -2,6 +2,35 @@
 
 {% block content %}
 
-<h1>PUBLISHED BOOK</h1>
+<h1 style="text-align: center;">My Published Books</h1>
+
+<ul>
+    {% if publish %}
+        {% for book in publish %}
+        <li>
+            {{ book.title }}
+            {% if not book.is_verified %}
+            <span style="color: blue;">(Not Confirmed)</span>
+            {% elif book.is_valid %}
+            <span style="color: green;">(Accepted)</span>
+            {% else %}
+            <span style="color: red;">(Rejected)</span>
+            {% endif %}
+        </li>
+        {% endfor %}
+    {% else %}
+        <li>
+            <p>You haven't publish a book</p>
+        </li>
+    {% endif %}
+</ul>
+
+</div>
+
+<script>
+    async function getPublishByUser(){
+        return fetch(`/publish/get-publish/`).then((res) => res.json());
+    }
+</script>
 
 {% endblock content %}
