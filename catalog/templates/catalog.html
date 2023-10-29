@@ -47,7 +47,7 @@
 							<div class="row row-cols-4">
 								{% for book in category.books %}
 									<div class="col">
-										<div class="product-item">
+										<div class="product-item" data-bs-toggle="modal" data-bs-target="#modalBook" onclick="showBookModal({{ book.id }})">
 											<figure class="product-style">
 												<img src="/media/{{ book.cover }}" alt="Books" class="product-item">
 												<button type="button" class="add-to-cart" data-product-tile="add-to-cart" onclick="addToMyBooks({{ book.id }})">Add to MyBooks</button>
