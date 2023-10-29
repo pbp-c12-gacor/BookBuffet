@@ -7,11 +7,29 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages 
 from django.urls import reverse
 from django.http import HttpResponseNotFound, HttpResponseRedirect
+from booksdatabase.models import Book, Category, Author
+from MyBooks.models import MyBook, Review
 from .forms import NewUserForm
 
 # Create your views here.
 def show_main(request):
+    # Get 2 books with the highest average rating
+    all_books = Book.objects.all()
+    for book in all_books:
+        reviews = Review.objects.filter(book=book)
+        if len(reviews) == 0:
+            book.average_rating = 0
+        else:
+            book.average_rating = sum([review.rating for review in reviews]) / len(reviews)
+    all_books = sorted(all_books, key=lambda book: book.average_rating, reverse=True)
+    top_books = all_books[:3]
+    
+    # Get 4 books randomly
+    random_picks = Book.objects.order_by('?')[:8]
+    
     context = {
+        'top_books': top_books,
+        'random_picks': random_picks,
     }
 
     return render(request, "main.html", context)
