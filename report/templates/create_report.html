@@ -12,10 +12,10 @@
         <!-- Input untuk mencari buku -->
         <label for="book_search">Search</label>
         <input type="text" id="book_search" placeholder="Search book by title">
+        <!-- Hasil pencarian buku -->
         <div id="book_search_results"></div>
         <br>
         {{form.as_p}}
-        <br>
         <button type="submit">Submit</button>
     </form>
 </div>
@@ -26,7 +26,7 @@
             var title = $(this).val();
             if (title.length > 2) {
                 $.get(`/api/search/?search=${title}`, function(data) {
-                    // Mengosongkan hasil pencarian sebelumnya
+                    // Menghapus hasil pencarian sebelumnya
                     $('#book_search_results').empty();
     
                     // Mengekstrak judul buku dan menambahkannya ke hasil pencarian

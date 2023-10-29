@@ -1,66 +1,17 @@
 # Create your views here.
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
+from django.urls import reverse
 from booksdatabase.models import Book
 from report.models import Report
 from report.forms import ReportForm
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
+@login_required(login_url='/login')
+@csrf_exempt
 # Fungsi untuk membuat laporan
-# def create_report(request):
-#     if request.method == 'POST':
-#         form = ReportForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-            
-#             previous_url = request.session.get('previous_url', '/')
-            
-#             # Bersihkan session
-#             if 'previous_url' in request.session:
-#                 del request.session['previous_url']
-            
-#             return redirect(previous_url)
-#     else:
-#         form = ReportForm()
-    
-#     return render(request, 'create_report.html', {'form': form})
-
-# def create_report(request):
-#     if request.method == 'POST':
-#         form = ReportForm(request.POST)
-#         if form.is_valid():
-#             print("Udah valid")
-#         form.user = request.user
-#         book_title = request.POST.get('book', None)
-#         form.book = Book.objects.get(title=book_title).id
-#         form.comment = request.POST.get('comment')
-#         print("belum valid")
-#         print(request.POST)
-#         print(form)
-#         if form.is_valid():
-#             print("dah valid")
-#             # Cek apakah buku ada dalam data POST
-#             book_title = request.POST.get('book', None)
-
-#             # Jika buku tidak ada dalam data POST, cari buku berdasarkan judul yang dipilih
-#             if book_title:
-#                 try:
-#                     book = Book.objects.get(title=book_title)
-#                 except Book.DoesNotExist:
-#                     book = None
-#             else:
-#                 book = None
-
-#             comment = form.cleaned_data['comment']
-#             # Simpan komentar dan buku yang sesuai dalam database
-#             report = Report.objects.create(book=book, comment=comment)
-#             return redirect('main:show_main')
-
-#     else:
-#         form = ReportForm()
-
-#     return render(request, 'create_report.html', {'form': form})
-
 def create_report(request):
     if request.method == 'POST':
         form = ReportForm(request.POST)
@@ -85,7 +36,7 @@ def search_books(request):
         books = Book.objects.filter(title__icontains=title)
         book_list = [{'title': book.title} for book in books]
 
-        return JsonResponse(book_list, safe=False)  # Tambahkan safe=False
+        return JsonResponse(book_list, safe=False)
     else:
         return JsonResponse([])  # Mengembalikan array kosong jika tidak ada hasil
 
@@ -104,6 +55,7 @@ def show_report(request):
     return render(request, "show_report.html", context)
 
 # Fungsi hapus report untuk admin saja
-def delete_report(request):
-    user = request.user
-    reports = Report.objects.all()
+def delete_report(request, id):
+    report = Report.objects.get(pk = id)
+    report.delete()
+    return HttpResponseRedirect(reverse('report:show_report'))
