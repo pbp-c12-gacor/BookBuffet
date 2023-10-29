@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 class NewUserForm(UserCreationForm):
     referral_code = forms.CharField(max_length=20, required=False)
-    isAdmin = forms.ChoiceField(choices=[(True,"Admin"), (False, "User")])
+    isAdmin = forms.ChoiceField(choices=[(True,"Admin"), (False, "User")], label="Admin/User")
 
     class Meta:
         model = User
@@ -14,8 +14,6 @@ class NewUserForm(UserCreationForm):
         cleaned_data = super().clean()
         is_admin = cleaned_data.get('isAdmin')
         referral_code = cleaned_data.get('referral_code')
-        print(is_admin)
-        print(referral_code)
         
         if (is_admin == "Admin" and referral_code != "PBPC12GACORMAXWIN"):
             raise forms.ValidationError("Invalid referral code for Admin registration.")
