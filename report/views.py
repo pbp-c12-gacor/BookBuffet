@@ -1,6 +1,6 @@
 # Create your views here.
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
 from django.urls import reverse
 from booksdatabase.models import Book
@@ -58,4 +58,7 @@ def show_report(request):
 def delete_report(request, id):
     report = Report.objects.get(pk = id)
     report.delete()
-    return HttpResponseRedirect(reverse('report:show_report'))
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({"status": "success"})
+    else:
+        return HttpResponseRedirect(reverse('report:show_report'))
