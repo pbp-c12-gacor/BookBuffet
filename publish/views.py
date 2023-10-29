@@ -37,8 +37,8 @@ def my_publish(request):
     publish = Publish.objects.filter(user = request.user)
     return render(request, 'my_publish.html', {'publish':publish})
 
-def show_publish_detail(request, publish_id):
-    publish = get_object_or_404(Publish, pk=publish_id)
+def show_publish_detail(request, id):
+    publish = Publish.objects.get(pk=id)
 
     if request.method == 'POST':
         if request.POST.get('verify') == 'true':
@@ -70,6 +70,19 @@ def get_publish_by_id(request, publish_id):
     publish = Publish.objects.get(pk=publish_id)
     return HttpResponse(serializers.serialize("json", publish), content_type="application/json")
 
+def get_unverified_publish(request):
+    publish = Publish.objects.filter(is_verified=False)
+    return HttpResponse(serializers.serialize("json", publish), content_type="application/json")
+
 def get_publish(request):
     publish = Publish.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', publish))
+
+@csrf_exempt
+def delete_all_publish(request):
+    try:
+        # Delete all rows from the "publish" table
+        Publish.objects.all().delete()
+        return HttpResponse(b"DELETED", status=201)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {str(e)}")
