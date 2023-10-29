@@ -2,16 +2,160 @@
 
 {% block content %}
 
-<div class="showcase" style="text-align: center;">
-    <form id="publish-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" id="publish-button">Submit</button>
-    </form>
-</div>
+<style>
+    .input-container {
+        margin-top: 30px; 
+        margin-bottom: 30px;
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+
+    .custom-width {
+        width: 100%;
+    }
+</style>
+
+<form class="p-1" id="publish-form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="input-container">
+        <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}:</label>
+        {{ form.title }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.subtitle.id_for_label }}" class="form-label">{{ form.subtitle.label }}:</label>
+        {{ form.subtitle }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.authors.id_for_label }}" class="form-label">{{ form.authors.label }}:</label>
+        {{ form.authors }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.publisher.id_for_label }}" class="form-label">{{ form.publisher.label }}:</label>
+        {{ form.publisher }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.published_date.id_for_label }}" class="form-label">{{ form.published_date.label }}:</label>
+        {{ form.published_date }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}:</label>
+        {{ form.description }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.page_count.id_for_label }}" class="form-label">{{ form.page_count.label }}:</label>
+        {{ form.page_count }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.categories.id_for_label }}" class="form-label">{{ form.categories.label }}:</label>
+        {{ form.categories }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.language.id_for_label }}" class="form-label">{{ form.language.label }}:</label>
+        {{ form.language }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.preview_link.id_for_label }}" class="form-label">{{ form.preview_link.label }}:</label>
+        {{ form.preview_link }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.cover.id_for_label }}" class="form-label">{{ form.cover.label }}:</label>
+        {{ form.cover }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.isbn_10.id_for_label }}" class="form-label">{{ form.isbn_10.label }}:</label>
+        {{ form.isbn_10 }}
+    </div>
+    
+    <div class="input-container">
+        <label for="{{ form.isbn_13.id_for_label }}" class="form-label">{{ form.isbn_13.label }}:</label>
+        {{ form.isbn_13 }}
+    </div>
+
+    <div class="form-footer" style="text-align: center; margin-top: 20px;">
+        <button id="button_add" class="btn btn-primary rounded fw-bold" style="margin: 0 auto;">Publish</button>
+    </div>
+</form>
+
+
+
+  <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="successModalLabel">Submission Successful</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Your submission has been successfully published.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <script>
-    
+    async function getPublishById(id){
+        return fetch(`/publish/get-publish/${id}/`).then((res) => res.json());
+    }
+
+    async function getPublishByUser(user){
+        return fetch(`/publish/get-publish/`).then((res) => res.json());
+    }
+
+    document.querySelector('#publish-form').addEventListener('submit', async (e) => {
+        e.preventDefault(); // Prevent the default form submission
+
+        // Serialize the form data
+        const formData = new FormData(e.target);
+
+        try {
+            // Send the form data using a Fetch request
+            const response = await fetch('/publish/', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                // Show the success modal if the request was successful
+                $('#successModal').modal('show');
+                document.querySelector('#id_title').value = '';
+                document.querySelector('#id_subtitle').value = '';
+                document.querySelector('#id_authors').value = '';
+                document.querySelector('#id_publisher').value = '';
+                document.querySelector('#id_published_date').value = '';
+                document.querySelector('#id_description').value = '';
+                document.querySelector('#id_page_count').value = '';
+                document.querySelector('#id_categories').value = '';
+                document.querySelector('#id_language').value = '';
+                document.querySelector('#id_preview_link').value = '';
+                document.querySelector('#id_cover').value = '';
+                document.querySelector('#id_isbn_10').value = '';
+                document.querySelector('#id_isbn_13').value = '';
+            }
+        } catch (error) {
+        }
+    });
+
+    $('#successModal').on('click', function () {
+        $('#successModal').modal('hide');
+
+    });
 </script>
 
 {% endblock content %}

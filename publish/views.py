@@ -13,33 +13,29 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import PublishForm
 from django.contrib.auth.decorators import user_passes_test
 
-# Create your views here.
 @login_required(login_url='/login')
-def show_publish(request):
-    context = {
-
-    }
-    return render(request, 'publish_book.html', context)
-
 @csrf_exempt
 # Method untuk melakukan pembuatan Publish
 def publish_book(request):
+    form = PublishForm()
     if request.method == 'POST':
         form = PublishForm(request.POST, request.FILES)
         if form.is_valid():
             new_publish = form.save(commit=False)
             new_publish.user = request.user
             new_publish.save()
-            return HttpResponseRedirect(reverse('main:show_main'))
-    else:
-        form = PublishForm()
-    return render(request, 'upload_book.html', {'form': form})
+            # return HttpResponseRedirect(reverse('main:show_main'))
+    return render(request, 'publish_book.html', {'form': form})
 
 def verify_publish(request):
     if request.user.is_staff:
         publish_to_verify = Publish.objects.filter(is_verified=False)
         return render(request, 'verify_publish.html', {'publish_to_verify': publish_to_verify})
     return render(request, 'not_permitted.html', {})
+
+def my_publish(request):
+    publish = Publish.objects.filter(user = request.user)
+    return render(request, 'my_publish.html', {'publish':publish})
 
 def show_publish_detail(request, publish_id):
     publish = get_object_or_404(Publish, pk=publish_id)
@@ -70,3 +66,10 @@ def show_publish_detail(request, publish_id):
             return redirect('publish:verify_publish')
     return render(request, 'verify_book.html', {'publish': publish})
 
+def get_publish_by_id(request, publish_id):
+    publish = Publish.objects.get(pk=publish_id)
+    return HttpResponse(serializers.serialize("json", publish), content_type="application/json")
+
+def get_publish(request):
+    publish = Publish.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', publish))
