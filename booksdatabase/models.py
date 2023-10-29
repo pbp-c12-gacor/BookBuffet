@@ -5,7 +5,7 @@ This module contains the models for the Book Buffet application.
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Avg
-from MyBooks.models import *
+
 
 class Book(models.Model):
     """
@@ -27,12 +27,7 @@ class Book(models.Model):
 
 
 
-    # ini buat nunjukkin review
-    def average_rating(self) -> float:
-        return Rating.objects.filter(post=self).aggregate(Avg("rating"))["rating__avg"] or 0
 
-    def __str__(self):
-        return f"{self.average_rating()}"
 
 
 class Author(models.Model):
@@ -53,11 +48,3 @@ class Category(models.Model):
 
     def __str__(self):
         return str(self.name)
-
-class Rating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    books = models.ForeignKey(Book, on_delete=models.CASCADE)
-    rating = models.IntegerField(default=0)
-
-    def __str__(self):
-        return f"{self.rating}"

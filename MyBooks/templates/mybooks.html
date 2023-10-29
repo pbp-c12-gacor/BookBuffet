@@ -16,25 +16,28 @@
         padding: 12px;
         text-align: center;
     }
+.bi{
+    color:black;
 
-
-
-
+}
 
 </style>
 
-                 <div><img src="{% static '/images/product-1.png' %}" class="card-img-top planner w-25" style="min-width: 120px;" ></div>
+                 <!-- <div><img src="{% static '/images/product-1.png' %}" class="card-img-top planner w-25" style="min-width: 120px;" ></div> -->
      
 
 
 
-<table id ="book_table"></table>
+<table class = "table" id ="book_table"></table>
 
 <div id ="tes"></div>
 
 <button onclick = "refreshBooks()"> refresh</button>
 
 
+
+<h4 type="button" class="btn text-dark border-0 fs-6 w-100 m-0 text-start" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-fill text-dark"></i> Edit</h4>   
+<div><i style="color: black;" class="bi bi-star-fill"></i></div>
 <script>
   async function getBooks(){
     console.log("testes")
@@ -52,19 +55,90 @@
       </tr>`
       mybooks.forEach((item) => {
           htmlString += `\n<tr>
-            <td> <img src = ${item.fields.Book.cover} alt = "Image"</td>
-          <td><p>${item.fields.Book.title}<p>
-              <a href ="${item.fields.Book.preview_link}">Read Here</a>
-              <p>${item.fields.Book.description}</p>
+            <td> <img src = /media/${item.fields.cover} alt = "Image"</td>
+          <td><p>${item.fields.title}<p>
+              <a href ="${item.fields.preview_link}">Read Here</a>
+              <p>${item.fields.description}</p>
             </td>
-          <td></td>
+          <td>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add a Review</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <select id ="rating" name = "rating" class="form-select" aria-label="Default select example">
+                        <option value="0"  selected>Pick a Rating</option>
+                        <option value="1">⭐
+                        </option>
+                        <option value="2">⭐⭐
+                        </option>
+                        <option value="3">⭐⭐⭐
+                        </option>
+                        <option value="4">⭐⭐⭐⭐
+                        </option>
+                        <option value="5">⭐⭐⭐⭐⭐
+                        </option>
+                      </select>
+                    <div class="mb-3">
+                        <label for="review" class="col-form-label">comment</label>
+                        <textarea class="form-control" id="review" name="review"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_add_review" data-book-id="${item.pk}"  data-bs-dismiss="modal">Add Review</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<h4 type="button" class="btn text-dark border-0 fs-6 w-100 m-0 text-start" data-bs-toggle="modal" id="button_leave_review" data-bs-target="#exampleModal"><i class="bi bi-pencil-fill text-dark"></i>Leave a Review</h4>
+<button type="button" class="btn btn-primary" id="button_show" onclick = "window.location.href='/MyBooks/show-review/${item.pk}'"> Look at Reviews
+                        </button> 
+            </td>
+          <td><a><button type="button" class="btn btn-primary" id="button_delete" onclick="removeFromCart(${item.pk})">Remove
+                        </button> </a>
+    
+                        </td>
   `
+ 
       })
-      
       document.getElementById("book_table").innerHTML = htmlString
-  
+
+
+
+
+
   }
   refreshBooks()
+
+
+ async function createComment(book_id){
+    console.log("masuk ga aya")
+    fetch(`/MyBooks/add-review-ajax/${book_id}/`, {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            }).then(refreshBooks)
+
+            document.getElementById("form").reset()
+            return false
+        }
+ 
+ function removeFromCart(id) {
+        fetch("{% url 'MyBooks:remove_from_cart' %}", {
+            method: 'DELETE',
+            body: JSON.stringify({
+                'id': id
+            })
+        }).then(refreshBooks)
+    }
+
 
 async function getProducts() {
         return fetch(`/api/books/`).then((res) => res.json())
@@ -84,17 +158,6 @@ async function getProducts() {
     function coba(){
       console.log("wow!")
     }
-    const rate = (rating, post_id) => {
-        fetch(`/rate/${post_id}/${rating}/`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(rest => {
-            window.location.reload();
-
-        })
-    }
 
 
     function addProduct(book_id) {
@@ -104,7 +167,19 @@ async function getProducts() {
 
         return false
     }
-    document.getElementById("button_add").onclick = addProduct
+
+    document.addEventListener('click', function(e) {
+  if (e.target && e.target.id == 'button_add_review') {
+    // Get the book_id from the button's 'data-book-id' attribute
+    var book_id = e.target.getAttribute('data-book-id');
+    createComment(book_id);
+  }
+
+
+
+});
+
+
 
 </script>
 
