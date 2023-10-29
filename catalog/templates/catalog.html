@@ -171,7 +171,7 @@
 			document.getElementById('book-language').innerHTML = `Language: ${book.language}`;
 			document.getElementById('book-isbn').innerHTML = `ISBN: ${book.isbn_10} (ISBN-10), ${book.isbn_13} (ISBN-13)`;
 			document.getElementById('book-cover').src = `${book.cover}`;
-			document.getElementById('book-reviews-link').href = `/MyBooks/show-review/${book_id}/`;
+			document.getElementById('book-reviews-link').href = `/MyBooks/show-review/${book_id}`;
 			document.getElementById('book-preview-link').href = book.preview_link;
 			document.getElementById('book-add-to-mybooks').onclick = function() { addToMyBooks(book_id); };
 		};
