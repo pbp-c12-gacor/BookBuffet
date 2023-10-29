@@ -31,7 +31,6 @@ def add_my_books(request: HttpRequest, book_id:int):
     return HttpResponseNotFound()
 
 
-@login_required(login_url='/login')
 def get_mybooks_json(request):
     my_book, created = MyBook.objects.get_or_create(user=request.user)
     return HttpResponse(serializers.serialize('json', my_book.books.all()))
@@ -42,7 +41,13 @@ def remove_from_cart(request):
         book_id = json.loads(request.body).get('id')
         user = request.user
         my_book, created = MyBook.objects.get_or_create(user=user)
-        review = Review.objects.get(book = book_id)
+
+        try:
+            review = Review.objects.filter(user= user).get(book = book_id)
+            review.delete()
+        except:
+            review = None
+
         book = Book.objects.get(id= book_id)
         review.delete()
         my_book.books.remove(book)
@@ -59,12 +64,10 @@ def add_review(request:HttpRequest, book_id:int):
     if request.method == 'POST':
         rating = request.POST.get("rating")
         review = request.POST.get("review")
-        print(rating)
-        print(review)
         user = request.user
         book = Book.objects.get(pk = book_id)
-
-        new_review = Review(rating=rating, review=review, user=user, book=book)
+        name = user.username
+        new_review = Review(rating=rating, review=review, user=user, book=book, username = name)
         new_review.save()
         print("tes faza 2")
 
@@ -74,13 +77,15 @@ def add_review(request:HttpRequest, book_id:int):
 
 @login_required(login_url='/login')
 @csrf_exempt
-def show_review(request, book_id):
+def show_review(request, book_id):  
     book = Book.objects.get(id = book_id)
+
+    user = request.user
     try:
-        mybook = MyBook.objects.get(books=book)
+        mybook = MyBook.objects.filter(user=user).get(books=book)
     except:
         mybook = "kosong"
-    
+
     review = Review.objects.filter(book=book)
     review_form= ReviewForm(request.POST or None)
     average_rating = Review.objects.filter(book = book).aggregate(Avg("rating"))["rating__avg"] or 0
@@ -108,16 +113,11 @@ def get_user_review(request, book_id):
     review = Review.objects.filter(user=request.user, book=book)
     return HttpResponse(serializers.serialize('json', review))
 
+
 @csrf_exempt
-def edit_review(request,review_id):
-    review = get_object_or_404(Review, pk=review_id)
-    if request.method == 'POST':
-        rating = request.POST.get('rating')
-        review = request.POST.get('review')
-        review.rating = rating
-        review.review = review
-        review.save()
-
-        return HttpResponse(b"UPDATED", status=201)
-
-
+def delete_review(request, book_id):
+    if request.method == 'DELETE':
+        review = Review.objects.filter(user=request.user).get(book=book_id)
+        review.delete()
+        return HttpResponse(b"DELETED", status=200)
+    return HttpResponseNotFound()
