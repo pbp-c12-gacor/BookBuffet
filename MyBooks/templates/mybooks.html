@@ -38,7 +38,6 @@
 
 <script>
   async function getBooks(){
-    console.log("testes")
     return fetch("{% url 'MyBooks:get_mybooks_json' %}").then((res) => res.json())
   }
   async function refreshBooks() {
@@ -69,10 +68,6 @@
 
       })
       document.getElementById("book_table").innerHTML = htmlString
-
-
-
-
 
   }
   refreshBooks()
