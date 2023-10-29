@@ -2,12 +2,12 @@ import unittest
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
-from .models import Post, Comment  # replace with your actual Post and Comment models
+from .models import Post, Comment 
 
 class CrudTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='12345')
-        self.post = Post.objects.create(user=self.user, title='Test Post', text='Test Content')  # adjust as needed
+        self.post = Post.objects.create(user=self.user, title='Test Post', text='Test Content')
         self.comment = Comment.objects.create(user=self.user, post=self.post, text='Test Comment') 
 
     def test_post_creation(self):
