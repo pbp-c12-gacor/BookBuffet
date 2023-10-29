@@ -35,34 +35,47 @@
     
     {% block content %}
 
+<style>
+    .showcase {
+        text-align: center;
+    }
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        overflow: auto;
+    }
+</style>
 
-
-
-<div class = "showcase">
-    <h1 class="text-title">Sign Up</h1>
-
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_table }}
-        <div>
-            <input class="register-button" type="submit" name="submit" value="Sign Up"/>
-        </div>
-
-        <div class="login">
-            Already have an account?
-            <a href="{% url 'main:login' %}">Login</a>
-        </div>
-
-    </form>
-
-    {% if messages %}
-    <ul>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+<body>
+    <div class = "showcase">
+        <h1 class="text-title">Sign Up</h1>
     
-</div>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_table }}
+            <div>
+                <input class="register-button" type="submit" name="submit" value="Sign Up"/>
+            </div>
+    
+            <div class="login">
+                Already have an account?
+                <a href="{% url 'main:login' %}">Login</a>
+            </div>
+    
+        </form>
+    
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+    </div>
+</body>
 
 {% endblock content %}
