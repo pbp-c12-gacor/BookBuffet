@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
 from publish.models import Publish
-from booksdatabase.models import Book
+from booksdatabase.models import Book, Author, Category
 from django.contrib import messages 
 from django.core import serializers
 from django.shortcuts import redirect
@@ -25,7 +25,6 @@ def publish_book(request):
             new_publish = form.save(commit=False)
             new_publish.user = request.user
             new_publish.save()
-            # return HttpResponseRedirect(reverse('main:show_main'))
     return render(request, 'publish_book.html', {'form': form})
 
 def verify_publish(request):
@@ -43,12 +42,12 @@ def show_publish_detail(request, id):
     publish = Publish.objects.get(pk=id)
     context = {
         'title': publish.title,
-        'authors': [author.name for author in publish.authors.all()],
+        'authors': publish.authors,
         'publisher': publish.publisher,
         'published_date': publish.published_date if publish.published_date else "-",
         'description': publish.description if publish.description else "-",
         'page_count': publish.page_count if publish.page_count else "-",
-        'categories': [category.name for category in publish.categories.all()],
+        'categories': publish.categories,
         'language': publish.language if publish.language else "-",
         'cover': publish.cover.url if publish.cover else None,
         'isbn_10': publish.isbn_10 if publish.isbn_10 else "-",
@@ -64,21 +63,30 @@ def confirming_publish(request, id):
         publish = Publish.objects.get(pk=id)
         verify = request.POST.get('verify')
         if verify == 'true':
+            authors = publish.authors.split(',')
+            categories = publish.categories.split(',')
+            book_authors = []
+            for author in authors:
+                author, created = Author.objects.get_or_create(name=author)
+                book_authors.append(author)
+            book_categories = []
+            for category in categories:
+                category, created = Category.objects.get_or_create(name=category)
+                book_categories.append(category)
             book = Book(
                 title=publish.title,
-                subtitle=publish.subtitle,
-                authors=publish.authors.all(),
                 publisher=publish.publisher,
                 published_date=publish.published_date,
                 description=publish.description,
                 page_count=publish.page_count,
-                categories=publish.categories.all(),
                 language=publish.language,
                 cover=publish.cover,
                 isbn_10=publish.isbn_10,
                 isbn_13=publish.isbn_13
             )
             book.save()
+            book.authors.set(book_authors)
+            book.categories.set(book_categories)
             publish.is_verified = True
             publish.is_valid = True
             publish.save()
