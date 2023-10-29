@@ -49,7 +49,6 @@ def remove_from_cart(request):
             review = None
 
         book = Book.objects.get(id= book_id)
-        review.delete()
         my_book.books.remove(book)
         return HttpResponse(b"DELETED", 201)
 

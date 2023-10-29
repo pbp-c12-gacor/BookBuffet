@@ -11,12 +11,15 @@
                 <img src={{book.cover.url}} alt="ga ada" class="rounded img-responsive mh-100">
             </div>
             <div class="book-details text-left ps-5" style="width: 550px;">
-                <h1>{{book.title}}</h1>
+                <h3>{{book.title}}</h3>
                 <div class="flex-row d-flex">
-                    <h5 class="me-5">{{book.author}}</h5>
-                    <span class="fa fa-star checked ms-3" style="color: orange; font-size: 24px;"></span>
-                    <h5 class="mx-2">{{average}} / 5.0  With Total reviews : ({{reviews.count}})</h5>
+                    <h4 class="mx-2">Published Date: {{book.published_date}}</h4>
                 </div>
+                <div>
+                    <span class="fa fa-star checked ms-3" style="color: orange; font-size: 24px;"></span>
+                    <span  class="mx-2">{{average}} / 5.0  With Total reviews : ({{reviews.count}})</span>
+                </div>
+
                 <br>
                 <br>
                 <br>
@@ -145,7 +148,8 @@
         function deleteReview(book_id) {
             fetch(`delete-review/${book_id}/`, {
                 method: 'DELETE'
-            }).then(refreshReview).then(refreshReviews)
+            }).then(response => {window.location.reload();
+        })
             return false
         }
 
@@ -184,12 +188,11 @@
         }
         refreshReviews()
         async function createComment(book_id){
-    console.log("masuk ga aya")
     fetch(`/MyBooks/add-review-ajax/${book_id}/`, {
                 method: "POST",
                 body: new FormData(document.querySelector('#form'))
-            }).then(refreshReview).then(refreshReviews)
-
+            }).then(response => {window.location.reload();
+        })
             document.getElementById("form").reset()
             return false
         }
@@ -212,7 +215,8 @@
   async function addProduct(book_id) {
         fetch(`/MyBooks/create-product-ajax/${book_id}/`, {
             method: "POST",
-        }).then(refreshReview).then(refreshReviews)
+        }).then(response => {window.location.reload();
+        })
         return false
     }
 
