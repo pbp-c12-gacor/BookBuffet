@@ -4,7 +4,7 @@ WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
-    DJANGO_SETTINGS_MODULE=yugioh_card.settings \
+    DJANGO_SETTINGS_MODULE=BookBuffet.settings \
     PORT=8000 \
     WEB_CONCURRENCY=2
 
