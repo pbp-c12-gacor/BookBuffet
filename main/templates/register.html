@@ -4,7 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <title>BookSaw - Free Book Store HTML CSS Template</title>
+    <title>Register to Book Buffet</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,34 +35,55 @@
     
     {% block content %}
 
+<style>
+    .showcase {
+        display: grid;
+        place-items: center;
+    }
 
+    .login {
+        text-align: center;
+    }
 
+    .button {
+        display: grid;
+        place-items: center;
+    }
 
-<div class = "showcase">
-    <h1 class="text-title">Sign Up</h1>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
 
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_table }}
-        <div>
-            <input class="register-button" type="submit" name="submit" value="Sign Up"/>
-        </div>
-
-        <div class="login">
-            Already have an account?
-            <a href="{% url 'main:login' %}">Login</a>
-        </div>
-
-    </form>
-
-    {% if messages %}
-    <ul>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+<body>
+    <div class = "showcase">
+        <h1 class="text-title">Sign Up</h1>
     
-</div>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_table }}
+            <div class="button">
+                <input class="register-button" type="submit" name="submit" value="Sign Up"/>
+            </div>
+    
+            <div class="login">
+                Already have an account?
+                <a href="{% url 'main:login' %}">Login</a>
+            </div>
+    
+        </form>
+    
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+    </div>
+</body>
 
 {% endblock content %}

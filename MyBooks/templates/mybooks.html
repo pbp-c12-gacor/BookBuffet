@@ -6,6 +6,7 @@
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
+
     }
 
     table, th, td {
@@ -28,13 +29,11 @@
 
 
 
-<table class = "table" id ="book_table"></table>
-
-<div id ="tes"></div>
-
-<button onclick = "refreshBooks()"> refresh</button>
+<table  id ="book_table"></table>
 
 
+<!-- ini buat tes add katalog buku ke mybooks -->
+<!-- <div id ="tes"></div> -->
 
 
 <script>
@@ -43,7 +42,6 @@
     return fetch("{% url 'MyBooks:get_mybooks_json' %}").then((res) => res.json())
   }
   async function refreshBooks() {
-    console.log("memekkokgabisa")
       document.getElementById("book_table").innerHTML = ""
       const mybooks = await getBooks()
       let htmlString = `<tr>
@@ -54,7 +52,7 @@
       </tr>`
       mybooks.forEach((item) => {
           htmlString += `\n<tr>
-            <td> <img src = /media/${item.fields.cover} alt = "Image"</td>
+            <td> <img src = /media/${item.fields.cover} alt = "Image" style="min-width: 120px;" </td>
           <td><p>${item.fields.title}<p>
               <a href ="${item.fields.preview_link}">Read Here</a>
               <p>${item.fields.description}</p>
@@ -124,7 +122,7 @@ async function getProducts() {
     function addProduct(book_id) {
         fetch(`create-product-ajax/${book_id}/`, {
             method: "POST",
-        }).then(refreshProducts)
+        }).then(refreshProducts).then(refreshBooks)
 
         return false
     }
