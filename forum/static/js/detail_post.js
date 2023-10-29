@@ -79,8 +79,8 @@ async function refreshPosts() {
   const comments = await getCommentsByPostId(post[0].pk);
   console.log(comments);
   let user = await getUserById(post[0].fields.user);
-  let dateAdded = new Date(post[0].fields.date_added); // asumsikan ini adalah tanggal saat post ditambahkan
-  let now = new Date(); // waktu saat ini
+  let dateAdded = new Date(post[0].fields.date_added);
+  let now = new Date(); 
 
   let timeDifference = calculateTime(now, dateAdded);
   let htmlString = `
@@ -127,8 +127,8 @@ async function refreshPosts() {
       (a, b) => new Date(b.fields.date_added) - new Date(a.fields.date_added)
     );
     for (const comment of comments) {
-      let dateAdded = new Date(comment.fields.date_added); // asumsikan ini adalah tanggal saat post ditambahkan
-      let now = new Date(); // waktu saat ini
+      let dateAdded = new Date(comment.fields.date_added); 
+      let now = new Date(); 
       timeDifference = calculateTime(now, dateAdded);
       htmlString += `
                       <div class="card mt-3 ml-5 bg-light shadow">
@@ -164,10 +164,8 @@ function editPost() {
   const csrfToken = document.querySelector(
     'input[name="csrfmiddlewaretoken"]'
   ).value;
-
-  // Construct the headers including the CSRF token
   const headers = new Headers({
-    "X-CSRFToken": csrfToken, // Include the CSRF token here
+    "X-CSRFToken": csrfToken,
   });
   fetch(`/forum/edit-post/${postId}/`, {
     method: "POST",
@@ -224,10 +222,8 @@ function editComment(post_id) {
   const csrfToken = document.querySelector(
     'input[name="csrfmiddlewaretoken"]'
   ).value;
-
-  // Construct the headers including the CSRF token
   const headers = new Headers({
-    "X-CSRFToken": csrfToken, // Include the CSRF token here
+    "X-CSRFToken": csrfToken, 
   });
   fetch(`/forum/edit-comment/${post_id}/`, {
     method: "POST",
