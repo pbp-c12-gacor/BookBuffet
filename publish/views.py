@@ -66,6 +66,7 @@ def confirming_publish(request, id):
         if verify == 'true':
             book = Book(
                 title=publish.title,
+                subtitle=publish.subtitle,
                 authors=publish.authors.all(),
                 publisher=publish.publisher,
                 published_date=publish.published_date,
@@ -105,6 +106,12 @@ def get_user(request, id):
     username = publish.user.username
     data = {'username': username}
     return JsonResponse(data)
+
+@csrf_exempt
+def delete_publish_by_id(request, id):
+    publish = Publish.objects.get(pk=id)
+    publish.delete()
+    return HttpResponse(b"DELETED", status=201)
 
 @csrf_exempt
 def delete_all_publish(request):
