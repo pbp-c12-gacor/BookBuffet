@@ -33,7 +33,7 @@
 
 
 <!-- ini buat tes add katalog buku ke mybooks -->
-<!-- <div id ="tes"></div> -->
+<div id ="tes"></div>`
 
 
 <script>
@@ -44,25 +44,22 @@
       document.getElementById("book_table").innerHTML = ""
       const mybooks = await getBooks()
       let htmlString = `<tr>
-          <th>Cover</th>
-          <th>Book</th>
-          <th>Finished Reading</th>
+          <th><h4  class="mx-2">Cover</h4></th>
+          <th><h4  class="mx-2">Book</h4></th>
+          <th><h4  class="mx-2">Finished</h4></th>
           <th colspan="3"></th>
       </tr>`
       mybooks.forEach((item) => {
           htmlString += `\n<tr>
-            <td> <img src = /media/${item.fields.cover} alt = "Image" style="min-width: 120px;" </td>
-          <td><p>${item.fields.title}<p>
-              <a href ="${item.fields.preview_link}">Read Here</a>
-              <p>${item.fields.description}</p>
+            <td> <img src = /media/${item.fields.cover} alt = "Image" style="min-width: 150px; max-width:150px"  </td>
+          <td><h4  class="mx-2">${item.fields.title}</h4>
+            <h4  class="mx-2">${item.fields.description}</h4>
+              <a href="${item.fields.preview_link}" class="btn btn-outline-accent btn-accent-arrow">Read Here</a>
             </td>
 <td>
-<button type="button" class="btn btn-primary" id="button_show" onclick = "window.location.href='/MyBooks/show-review/${item.pk}'"> Look at Reviews
-                        </button> 
+<a id="button_show" onclick = "window.location.href='/MyBooks/show-review/${item.pk}'" class="btn btn-outline-accent btn-accent-arrow">Go to Review</a>
             </td>
-          <td><a><button type="button" class="btn btn-primary" id="button_delete" onclick="removeFromCart(${item.pk})">Remove
-                        </button> </a>
-    
+          <td> <a id="button_delete" onclick="removeFromCart(${item.pk})" class="btn btn-outline-accent btn-accent-arrow">Remove</a>
                         </td>
   `
 
@@ -74,7 +71,6 @@
 
 
  async function createComment(book_id){
-    console.log("masuk ga aya")
     fetch(`/MyBooks/add-review-ajax/${book_id}/`, {
                 method: "POST",
                 body: new FormData(document.querySelector('#form'))
@@ -109,9 +105,6 @@ async function getProducts() {
         document.getElementById("tes").innerHTML = htmlString
     }
     refreshProducts()
-    function coba(){
-      console.log("wow!")
-    }
 
 
     function addProduct(book_id) {
