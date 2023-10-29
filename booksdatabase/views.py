@@ -7,6 +7,8 @@ from .permissions import IsAdminOrReadOnly
 class PrefixSearchFilter(filters.SearchFilter):
     def filter_queryset(self, request, queryset, view):
         search = request.query_params.get("search", None)
+        if not search:
+            return queryset
         if ":" in search:
             search_terms = search.split(",")
             for term in search_terms:
@@ -20,6 +22,8 @@ class PrefixSearchFilter(filters.SearchFilter):
                     queryset = queryset.filter(authors__name__icontains=value)
                 elif prefix == "category":
                     queryset = queryset.filter(categories__name__icontains=value)
+        else:
+            queryset = queryset.filter(title__icontains=search) | queryset.filter(authors__name__icontains=search)
         return queryset
 
 

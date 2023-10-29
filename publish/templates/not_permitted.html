@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Credit code to : https://codepen.io/mantonet/pen/MXqPrp -->
+
+<style>
+    *, *:before, *:after {
+  box-sizing: border-box;
+}
+html {
+    height: 100%;
+}
+body {
+    font-family: 'Raleway', sans-serif;
+    height: 100%;
+    padding: 10px;
+}
+
+a {
+  text-decoration:none;
+}
+a:hover {
+  text-decoration:none;
+}
+
+.text-wrapper {
+    height: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+}
+
+.title {
+    font-size: 5em;
+    font-weight: 700;
+    color: #bd8734;
+}
+
+.subtitle {
+    font-size: 40px;
+    font-weight: 700;
+    color: black;
+}
+
+.buttons {
+    margin: 30px;
+    font-weight: 700;
+    border: 2px solid black;
+    background-color: black;
+    text-decoration: none;
+    padding: 15px;
+    text-transform: uppercase;
+    border-radius: 26px;
+    transition: all 0.2s ease-in-out;
+    display: inline-block;
+}
+
+.buttons:hover{
+    background-color: #bd8734;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid #bd8734;
+}
+
+.buttons:hover .button{
+    background-color: transparent;
+    color: black;
+    transition: all 0.2s ease-in-out;
+}
+</style>
+
+<div class="text-wrapper">
+    <div class="title" data-content="404">
+        403 - ACCESS DENIED
+    </div>
+
+    <div class="subtitle">
+        Oops, You don't have permission to access this page.
+    </div>
+
+    <div class="buttons">
+        <a class="button" href="/">Go to homepage</a>
+    </div>
+</div>
+
+{% endblock content %}

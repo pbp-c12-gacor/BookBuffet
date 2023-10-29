@@ -1,22 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Report</title>
-    <!-- jQuery UI untuk fitur autocomplete -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
 
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+<div class="align-center">
     <h1>Create a New Report</h1>
-    
+        
     <!-- Render Form -->
     <form method="post" action="{% url 'report:create_report' %}">
         {% csrf_token %}
-        {{ form.as_p }}
+        <!-- Input untuk mencari buku -->
+        <label for="book_search">Search</label>
+        <input type="text" id="book_search" placeholder="Search book by title">
+        <!-- Hasil pencarian buku -->
+        <div id="book_search_results"></div>
+        <br>
+        {{form.as_p}}
         <button type="submit">Submit</button>
     </form>
+</div>
 
-</body>
-</html>
+<script>
+    $(document).ready(function() {
+        $('#book_search').on('input', function() {
+            var title = $(this).val();
+            if (title.length > 2) {
+                $.get(`/api/search/?search=${title}`, function(data) {
+                    // Menghapus hasil pencarian sebelumnya
+                    $('#book_search_results').empty();
+    
+                    // Mengekstrak judul buku dan menambahkannya ke hasil pencarian
+                    if (data.length > 0) {
+                        var ul = $('<ul>');
+                        data.forEach(function(book) {
+                            var li = $('<li>').text(book.title);
+                            li.on('click', function() {
+                                // Memasukkan judul yang dipilih ke Input pencarian
+                                $('#book_search').val(book.title);
+                                $('#book_search_results').empty();
+                            });
+                            ul.append(li);
+                        });
+                        $('#book_search_results').append(ul);
+                    } else {
+                        $('#book_search_results').text('No books found');
+                    }
+                });
+            } else {
+                $('#book_search_results').empty();
+            };
+        });
+    });
+</script>
+    
+{% endblock content %}
