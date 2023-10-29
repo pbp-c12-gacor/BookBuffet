@@ -1,65 +1,47 @@
+import json
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseNotFound
-from booksdatabase.models import Book, Category, Author, Rating
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden, HttpRequest
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from booksdatabase.models import Book, Category, Author
+from MyBooks.models import MyBook, Review
 
 # Create your views here.
 def show_catalog(request):
+    print(request.user)
     all_books = Book.objects.all()
+    for book in all_books:
+        reviews = Review.objects.filter(book=book)
+        if len(reviews) == 0:
+            book.average_rating = 0
+        else:
+            book.average_rating = sum([review.rating for review in reviews]) / len(reviews)
+    all_books = sorted(all_books, key=lambda book: book.average_rating, reverse=True)
     
-    books_by_category = {}
     categories = Category.objects.all()
     for category in categories:
-        books_by_category[category] = Book.objects.filter(categories=category)
-    
-    business = Category.objects.get(name='Business & Economics')
-    business.processed_name = 'business-and-economics'
-    
-    biography = Category.objects.get(name='Biography & Autobiography')
-    biography.processed_name = 'biography-and-autobiography'
-    
-    science = Category.objects.get(name='Science')
-    science.processed_name = 'science'
-    
-    fiction = Category.objects.get(name='Fiction')
-    fiction.processed_name = 'fiction'
-    
-    self_help = Category.objects.get(name='Self-Help')
-    self_help.processed_name = 'self-help'
-    
-    popular_categories = {business, biography, science, fiction, self_help}
-    
-    categories = set(categories) - popular_categories
-    for category in categories:
-        category.processed_name = category.name.replace(' ', '-').replace('&', 'and').lower()
+        category.processed_name = category.name.replace('&', 'and').replace(' ', '-').lower()
+        books = Book.objects.filter(categories=category)
+        for book in books:
+            reviews = Review.objects.filter(book=book)
+            if len(reviews) == 0:
+                book.average_rating = 0
+            else:
+                book.average_rating = sum([review.rating for review in reviews]) / len(reviews)
+        category.books = sorted(books, key=lambda book: book.average_rating, reverse=True)
     
     context = {
-        'popular_categories': popular_categories,
         'categories': categories,
         'all_books': all_books,
-        'books_by_category': books_by_category,
     }
-    for category in categories:
-        print(f"{category}:")
-        for book in books_by_category[category]:
-            print(f"  {book.title}")
+    
     return render(request, 'catalog.html', context)
 
 def show_book(request, book_id):
     book = Book.objects.get(id=book_id)
-    ratings = Rating.objects.filter(book=book)
 
     context = {
         'book': book,
-        'ratings': ratings,
     }
 
     return render(request, 'book.html', context)
-
-def show_books(request):
-    books = Book.objects.all()
-
-    context = {
-        'books': books,
-    }
-
-    return render(request, 'books.html', context)
