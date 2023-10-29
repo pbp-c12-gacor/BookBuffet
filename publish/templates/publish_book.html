@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-
+{% block content %}
 
 <style>
     .input-container {
@@ -110,6 +110,7 @@
   </div>
 
 <script>
+
     document.querySelector('#publish-form').addEventListener('submit', async (e) => {
         e.preventDefault(); // Prevent the default form submission
 

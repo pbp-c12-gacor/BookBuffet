@@ -25,7 +25,7 @@
     }
 </style>
 
-<h1>Publications to Verify</h1>
+<h1 style="text-align: center;">Books to Verify</h1>
 <div id="publishList"></div>
 
 <script>
@@ -68,14 +68,17 @@
         card.appendChild(publisher);
 
         const publishedDate = document.createElement('p');
-        publishedDate.innerHTML = `<strong>Submission Date:</strong> ${publish.fields.date_added}`;
+        const rawDate = new Date(publish.fields.date_added);
+        const formattedDate = `${rawDate.getFullYear()}-${(rawDate.getMonth() + 1).toString().padStart(2, '0')}-${rawDate.getDate().toString().padStart(2, '0')}`;
+        publishedDate.innerHTML = `<strong>Submission Date:</strong> ${formattedDate}`;
         card.appendChild(publishedDate);
 
         const submittedBy = document.createElement('p');
-        submittedBy.innerHTML = `<strong>Submitted By:</strong> ${publish.fields.user}`;
+        const user = await getUser(publish.pk);
+        if (user.username) {
+            submittedBy.innerHTML = `<strong>Submitted By:</strong> ${user.username}`;
+        }
         card.appendChild(submittedBy);
-
-        // Add other publication details as needed
 
         const buttonContainer = document.createElement('div');
         buttonContainer.classList.add('button-container');
@@ -96,6 +99,10 @@
 
     async function getUnverifiedPublish() {
         return fetch('/publish/get-unverified-publish/').then(response => response.json())
+    }
+
+    async function getUser(id) {
+        return fetch(`/publish/get-user/${id}`).then(response => response.json())
     }
 
     async function refreshUnverifiedPublish() {

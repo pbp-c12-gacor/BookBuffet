@@ -2,12 +2,89 @@
 
 {% block content %}
 
-
+<div>
+    <h1 style="text-align: center;">Publish Details</h1>
+    <div id="publishDetails">
+        <div style="display: flex; align-items: center;">
+            <div style="flex: 1; ">
+                {% if cover %}
+                    <img src="{{ cover }}" alt="Cover Image" style="max-width: 100%;">
+                {% else %}
+                    <p style="margin-left: 200px;"><strong>Cover:</strong> Not available</p>
+                {% endif %}
+            </div>
+            <div style="flex: 2; margin-left: 20px;">
+                <p><strong>Title:</strong> {{ title }}</p>
+                <p><strong>Authors:</strong> {{ authors|join:', ' }}</p>
+                <p><strong>Publisher:</strong> {{ publisher }}</p>
+                <p><strong>Published Date:</strong> {{ published_date }}</p>
+                <p><strong>Description:</strong> {{ description }}</p>
+                <p><strong>Page Count:</strong> {{ page_count }}</p>
+                <p><strong>Categories:</strong> {{ categories|join:', ' }}</p>
+                <p><strong>Language:</strong> {{ language }}</p>
+                <p><strong>ISBN-10:</strong> {{ isbn_10 }}</p>
+                <p><strong>ISBN-13:</strong> {{ isbn_13 }}</p>
+                <p><strong>Submitted By:</strong> {{ submitted_by }}</p>
+                <p><strong>Date Added:</strong> {{ date_added }}</p>
+            </div>
+        </div>
+        <button id="backButton" onclick="goBack()" style="position: absolute; top: 100px; 
+        left: 20px; cursor: pointer; background-color: transparent; color: black;">&#8678; Back</button>
+        <div style="display: flex; justify-content: center;">
+            <button id="acceptButton" style="margin-right: 10px;">Accept</button>
+            <button id="rejectButton">Reject</button>
+        </div>
+    </div>
+</div>
 
 <script>
-    async function getPublishById(id){
-        return fetch(`/publish/get-publish/${id}/`).then((res) => res.json());
+
+    function goBack() {
+        window.location.href = '/publish/verify-publish/';
     }
+
+    document.getElementById('acceptButton').addEventListener('click', function () {
+        sendConfirmation(true);
+        goBack();
+    });
+
+    document.getElementById('rejectButton').addEventListener('click', function () {
+        sendConfirmation(false);
+        goBack();
+    });
+
+    function sendConfirmation(confirmation) {
+        const urlParts = window.location.pathname.split('/');
+        const id = urlParts[urlParts.length - 2];
+        const csrfToken = getCookie('csrftoken');
+
+        console.log('ID:', id);
+
+        fetch(`/publish/confirming-publish/${id}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `verify=${confirmation}`,
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+            return parts.pop().split(';').shift();
+        }
+    }
+    
 </script>
 
 {% endblock content %}

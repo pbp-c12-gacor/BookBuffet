@@ -10,7 +10,6 @@ from django.http import HttpResponseNotFound, HttpResponseRedirect
 from .forms import NewUserForm
 
 # Create your views here.
-@login_required(login_url='/login')
 def show_main(request):
     context = {
     }
