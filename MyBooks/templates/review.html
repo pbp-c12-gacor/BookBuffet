@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock meta %}
+
+{% block content %}
+    <div class="container mt-3 pt-2 px-5">
+        <div class="book-container flex-row d-flex justify-content-center">
+            <div class="book-image ms-5" style="height: 300px; width: 200px;">
+                <img src={{book.cover.url}} alt="ga ada" class="rounded img-responsive mh-100">
+            </div>
+            <div class="book-details text-left ps-5" style="width: 550px;">
+                <h1>{{book.title}}</h1>
+                <div class="flex-row d-flex">
+                    <h5 class="me-5">{{book.author}}</h5>
+                    <span class="fa fa-star checked ms-3" style="color: orange; font-size: 24px;"></span>
+                    <h5 class="mx-2">{{average}} / 5.0  With Total reviews : ({{reviews.count}})</h5>
+                </div>
+                <br>
+                <br>
+                <br>
+            </div>
+        </div>
+        <hr class="my-4">
+
+        
+        <div class="reviews-container">
+            <div class="">
+                <h2 class="ms-5">Your Review:</h2>
+                <div id="user-review" class="d-flex flex-column justify-content-center mt-5"></div>
+
+                </div>
+
+                <h2 class="ms-5">Reviews:</h2>
+                <div id="reviews" class="d-flex flex-column justify-content-center mt-5">
+
+                </div>
+
+<script>
+    const book_id ="{{book.id}}"
+</script>
+<script>
+        async function getReviews() {
+            return fetch(`get-reviews/${book_id}`).then((res) => res.json())
+        }
+
+        async function getUserReviews() {
+            return fetch(`get-user-reviews/${book_id}`).then((res) => res.json())
+        }
+        async function refreshReview() {
+            const userReview = await getUserReviews()
+            const review = userReview[0]
+            document.getElementById("user-review").innerHTML = ""
+            let htmlString = ""
+            if (review !== undefined) {
+                htmlString = `\n
+                <div class="user-review container" style="width: 900px; height: 180px;">
+                        <div class="card d-flex flex-column p-4">
+                            <div class="review-details d-flex flex-row">
+                                <div class="user d-flex flex-row">
+                                    <span class="fa fa-user me-1 me-3" style="font-size: 36px;"></span>
+                                    <p style="font-size: 20px; width: 250px;">${review.fields.user}</p>
+                                </div>
+                                <div class="rating mx-2" style="width: 400px;">
+                                    <span>Rated The Book:</span>
+                                    <span class="fa fa-star checked" style="color: orange; font-size: 24px;"></span>
+                                    <span>${review.fields.rating}.0/5.0</span>
+                                </div>
+                                <div class="text-left" style="width: 140px;">
+                                    ${review.fields.date_added}
+                                </div>
+                            </div>
+                            <div class="review text mt-2" style="width: 500px; height: auto;">
+                                ${review.fields.review}
+                            </div>
+                        </div>
+                    </div>`
+            } else {
+                htmlString = `\n
+                    <div class="mt-3">
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" class="rounded-4 p-3" style="background-color: gold; ">Add Rating & Review</button>
+                    </div>`
+            }
+            document.getElementById("user-review").innerHTML = htmlString
+        }
+        refreshReview()
+
+        async function refreshReviews() {
+            const reviews = await getReviews()
+            document.getElementById("reviews").innerHTML = ""
+            let htmlString = ""
+            let ratingChar = ''
+            reviews.forEach((review) => {
+                let rating = review.fields.rating
+
+                htmlString += `\n
+                <div class="user-review container" style="width: 900px; height: 180px;">
+                        <div class="card d-flex flex-column p-4">
+                            <div class="review-details d-flex flex-row">
+                                <div class="user d-flex flex-row">
+                                    <span class="fa fa-user me-1 me-3" style="font-size: 36px;"></span>
+                                    <p style="font-size: 20px; width: 250px;">${review.fields.user}</p>
+                                </div>
+                                <div class="rating mx-2" style="width: 400px;">
+                                    <span>Rated The Book:</span>
+                                    <span class="fa fa-star checked" style="color: orange; font-size: 24px;"></span>
+                                    <span>${rating}.0/5.0</span>
+                                </div>
+                                <div class="text-left" style="width: 140px;">
+                                    ${review.fields.date_added}
+                                </div>
+                            </div>
+                            <div class="review text mt-2" style="width: 500px; height: auto;">
+                                ${review.fields.review}
+                            </div>
+                        </div>
+                    </div>`
+            })
+            document.getElementById("reviews").innerHTML = htmlString
+        }
+        refreshReviews()
+
+</script>
+
+
+
+{% endblock content %}
