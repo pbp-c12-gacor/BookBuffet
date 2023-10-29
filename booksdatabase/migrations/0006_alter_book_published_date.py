@@ -2,6 +2,13 @@
 
 from django.db import migrations, models
 
+def convert_published_date(apps, schema_editor):
+    Book = apps.get_model('booksdatabase', 'Book')
+    for book in Book.objects.all():
+        if book.published_date:
+            book.published_date = book.published_date.split('-')[0]
+            book.published_date = int(book.published_date)
+            book.save()
 
 class Migration(migrations.Migration):
     dependencies = [
@@ -12,6 +19,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(convert_published_date),
         migrations.AlterField(
             model_name="book",
             name="published_date",
