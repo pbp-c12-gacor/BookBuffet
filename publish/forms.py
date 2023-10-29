@@ -22,7 +22,7 @@ class PublishForm(ModelForm):
     )
 
     authors = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Authors', 'class': 'custom-width'}),
+        widget=forms.TextInput(attrs={'placeholder': 'Separate Each Authors with Comma', 'class': 'custom-width'}),
         required=False
     )
 
@@ -47,7 +47,7 @@ class PublishForm(ModelForm):
     )
 
     categories = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Categories', 'class': 'custom-width'}),
+        widget=forms.TextInput(attrs={'placeholder': 'Separate Each Categories with Comma', 'class': 'custom-width'}),
         required=True
     )
 

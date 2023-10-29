@@ -34,7 +34,6 @@ def register(request):
                 user = form.save(commit=False)
                 user.is_staff = False
                 user.save()
-
             messages.success(request, 'Your account has been successfully registered!')
             return redirect('main:login')
     context = {'form': form}
