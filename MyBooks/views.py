@@ -1,3 +1,4 @@
+from audioop import avg
 from django.shortcuts import get_object_or_404, render
 from booksdatabase.models import *
 from MyBooks.models import *
@@ -9,6 +10,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from MyBooks.forms import *
 import json
+from django.db.models import Avg
 
 
 @login_required(login_url='/login')
