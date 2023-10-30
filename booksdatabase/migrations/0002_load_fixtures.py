@@ -24,7 +24,7 @@ def load_my_initial_data(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("booksdatabase", "0007_rating"),
+        ("booksdatabase", "0001_initial"),
     ]
 
     operations = [
