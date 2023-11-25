@@ -165,7 +165,7 @@ def create_post_flutter(request):
         data = json.loads(request.body)
 
         new_product = Post.objects.create(
-            user_id = int(data['user']),
+            user = request.user,
             title = data["title"],
             text = data["text"],
         )
