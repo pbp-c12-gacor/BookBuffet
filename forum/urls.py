@@ -22,4 +22,7 @@ urlpatterns = [
     path('delete-post/<int:post_id>/', delete_post, name='delete_post'),
     path('edit-post/<int:post_id>/', edit_post, name='edit_post'),
     path('edit-comment/<int:comment_id>/', edit_comment, name='edit_comment'),
+    path('post/json/', show_post_json, name='show_post'),
+    path('comment/json/', show_comment, name='show_comment'),
+    path('create-post-flutter/', create_post_flutter, name='create_post_flutter'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

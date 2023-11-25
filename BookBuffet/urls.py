@@ -28,4 +28,5 @@ urlpatterns = [
     path('api/', include('booksdatabase.urls')),
     path('publish/', include('publish.urls')),
     path('catalog/', include('catalog.urls')),
+    path('auth/', include('authentication.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
