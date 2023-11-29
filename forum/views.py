@@ -1,7 +1,8 @@
 import datetime
+import json
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from forum.models import Post, User, Comment
 from booksdatabase.models import Book
@@ -157,6 +158,42 @@ def get_post_by_id(request, post_id):
         post = get_object_or_404(Post, pk=post_id)
         return HttpResponse(serializers.serialize("json", [post]), content_type="application/json")
     
+@csrf_exempt
+def create_post_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+
+        new_post = Post.objects.create(
+            user = request.user,
+            title = data["title"],
+            text = data["text"],
+        )
+
+        new_post.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+    
+@csrf_exempt
+def create_comment_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+        post = Post.objects.get(id=data['post_id'])
+        new_comment = Comment.objects.create(
+            user = request.user,
+            post = post,
+            text = data["text"],
+        )
+
+        new_comment.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+    
 
 @login_required
 @csrf_exempt
@@ -188,4 +225,13 @@ def get_comments_by_post_id(request, post_id):
 def get_comment_by_id(request, comment_id):
     comment = Comment.objects.get(pk=comment_id)
     return HttpResponse(serializers.serialize("json", [comment]), content_type="application/json")
+
+def show_post_json(request):
+    data = Post.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def show_comment(request):
+    data = Comment.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
 
