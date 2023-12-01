@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 import environ
+import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -104,9 +106,11 @@ DATABASES = {
 
 if PRODUCTION:
     DATABASES = {
-        'default': env.db('DATABASE_URL')
+        "default": dj_database_url.config(
+            default="postgres://bookbuffet_user:0qPJN5DudGY4EHT2LiZq2h9m66bcTVi8@dpg-clktrosjtl8s73f2mo80-a.singapore-postgres.render.com/bookbuffet",
+            conn_max_age=600,
+        )
     }
-    DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
