@@ -25,5 +25,7 @@ urlpatterns = [
     path('post/json/', show_post_json, name='show_post'),
     path('comment/json/', show_comment, name='show_comment'),
     path('create-post-flutter/', create_post_flutter, name='create_post_flutter'),
+    path('edit-post-flutter/<int:post_id>/', edit_post_flutter, name='edit_post_flutter'),
+    path('edit-comment-flutter/<int:comment_id>/', edit_comment_flutter, name='edit_comment_flutter'),
     path('create-comment-flutter/', create_comment_flutter, name='create_comment_flutter'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

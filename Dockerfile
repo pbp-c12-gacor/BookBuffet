@@ -6,7 +6,8 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
     DJANGO_SETTINGS_MODULE=BookBuffet.settings \
     PORT=8000 \
-    WEB_CONCURRENCY=2
+    WEB_CONCURRENCY=2 \
+    DATABASE_URL=postgres://bookbuffet_user:0qPJN5DudGY4EHT2LiZq2h9m66bcTVi8@dpg-clktrosjtl8s73f2mo80-a.singapore-postgres.render.com/bookbuffet
 
 # Install system packages required Django.
 RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \

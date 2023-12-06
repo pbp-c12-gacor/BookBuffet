@@ -164,10 +164,12 @@ def create_post_flutter(request):
         
         data = json.loads(request.body)
 
+
         new_post = Post.objects.create(
             user = request.user,
             title = data["title"],
             text = data["text"],
+            book = Book.objects.get(id=data['book']),
         )
 
         new_post.save()
@@ -176,6 +178,37 @@ def create_post_flutter(request):
     else:
         return JsonResponse({"status": "error"}, status=401)
     
+@csrf_exempt
+def edit_post_flutter(request, post_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        try:
+            post = Post.objects.get(pk=post_id) 
+            post.title = data["title"]
+            post.text = data["text"]
+            post.save()
+
+            return JsonResponse({"status": "success"}, status=200)
+        except Post.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Post not found"}, status=404)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+    
+    
+@csrf_exempt
+def edit_comment_flutter(request, comment_id):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+        comment = Comment.objects.get(pk = comment_id)
+        comment.text = data['text']
+        comment.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+
 @csrf_exempt
 def create_comment_flutter(request):
     if request.method == 'POST':
@@ -193,25 +226,23 @@ def create_comment_flutter(request):
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
-    
 
-@login_required
+
 @csrf_exempt
 def delete_post(request, post_id):
     if request.method == "DELETE":
-        post = Post.objects.get(pk=post_id, user=request.user)
+        post = Post.objects.get(pk=post_id)
         post.delete()
-        return HttpResponse(b"DELETED", status=201)
-    return HttpResponseNotFound()
+        return JsonResponse({"status": "success"}, status=200)
+    return JsonResponse({"status": "error"}, status=401)
 
-@login_required
 @csrf_exempt
 def delete_comment(request, comment_id):
     if request.method == "DELETE":
-        comment = Comment.objects.get(pk=comment_id, user=request.user)
+        comment = Comment.objects.get(pk=comment_id)
         comment.delete()
-        return HttpResponse(b"DELETED", status=201)
-    return HttpResponseNotFound()
+        return JsonResponse({"status": "success"}, status=200)
+    return JsonResponse({"status": "error"}, status=401)
 
 def get_user_by_id(request, user_id):
     user = User.objects.filter(id=user_id)
