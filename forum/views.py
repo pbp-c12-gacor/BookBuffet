@@ -164,10 +164,12 @@ def create_post_flutter(request):
         
         data = json.loads(request.body)
 
+
         new_post = Post.objects.create(
             user = request.user,
             title = data["title"],
             text = data["text"],
+            book = Book.objects.get(id=data['book']),
         )
 
         new_post.save()
