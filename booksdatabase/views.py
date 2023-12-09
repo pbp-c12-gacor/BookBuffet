@@ -1,7 +1,8 @@
 from rest_framework import viewsets, filters, generics
 from .models import Book, Author, Category
-from .serializers import BookSerializer, AuthorSerializer, CategorySerializer
+from .serializers import BookSerializer, AuthorSerializer, CategorySerializer, RatingSerializer
 from .permissions import IsAdminOrReadOnly
+from MyBooks.models import Review
 
 
 class PrefixSearchFilter(filters.SearchFilter):
@@ -96,3 +97,21 @@ class BooksByAuthorAndCategory(generics.ListAPIView):
         author_id = self.kwargs["author_id"]
         category_id = self.kwargs["category_id"]
         return Book.objects.filter(authors__pk=author_id, categories__pk=category_id)
+    
+
+# Make a view to get all reviews of a book
+class RatingsViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = RatingSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+# Make a view to get one review of a book
+class RatingsByBook(generics.ListAPIView):
+    serializer_class = RatingSerializer
+    lookup_field = "pk"
+    lookup_url_kwarg = "book_id"
+
+    def get_queryset(self):
+        book_id = self.kwargs["book_id"]
+        return Review.objects.filter(book__pk=book_id)

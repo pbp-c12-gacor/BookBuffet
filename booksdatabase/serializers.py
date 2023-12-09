@@ -3,6 +3,7 @@ Serializers for the booksdatabase app.
 """
 from rest_framework import serializers
 from .models import Book, Author, Category
+from MyBooks.models import Review
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -73,3 +74,14 @@ class BookSerializer(serializers.ModelSerializer):
             ext = cover_data.name.split(".")[-1]
             book.cover.save(f"{book.id}.{ext}", cover_data, save=True)
         return book
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Rating model.
+    """
+    book = BookSerializer()
+
+    class Meta:
+        model = Review
+        fields = ['username', 'review', 'rating', 'date_added', 'book']
