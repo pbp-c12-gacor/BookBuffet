@@ -10,7 +10,7 @@ class PrefixSearchFilter(filters.SearchFilter):
         if not search:
             return queryset
         if ":" in search:
-            search_terms = search.split(",")
+            search_terms = search.split(":")
             for term in search_terms:
                 if ":" not in term:
                     queryset = queryset.filter(title__icontains=term)
