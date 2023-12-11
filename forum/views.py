@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 import datetime
 import json
 from django.shortcuts import get_object_or_404, render
@@ -163,13 +164,17 @@ def create_post_flutter(request):
     if request.method == 'POST':
         
         data = json.loads(request.body)
-
-
+        book_id = data.get('book')
+        book = None
+        if(book_id != "null") :
+            print("dwajndaiw")
+            book = Book.objects.get(id=book_id) if book_id else None
+        print(book_id + " dawndwaijdnaidjna")
         new_post = Post.objects.create(
             user = request.user,
             title = data["title"],
             text = data["text"],
-            book = Book.objects.get(id=data['book']),
+            book = book,
         )
 
         new_post.save()
