@@ -125,7 +125,6 @@ def delete_publish_by_id(request, id):
 @csrf_exempt
 def delete_all_publish(request):
     try:
-        # Delete all rows from the "publish" table
         Publish.objects.all().delete()
         return HttpResponse(b"DELETED", status=201)
     except Exception as e:
@@ -159,8 +158,3 @@ def create_publish_flutter(request):
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
-
-@csrf_exempt
-def delete_publish_flutter(request):
-    
-    return
