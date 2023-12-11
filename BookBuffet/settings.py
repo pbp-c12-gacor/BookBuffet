@@ -98,19 +98,17 @@ WSGI_APPLICATION = "BookBuffet.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=env("DATABASE_URL", default="sqlite:///db.sqlite3"),
+        conn_max_age=600,
+    )
 }
 
-if PRODUCTION:
-    DATABASES = {
-        "default": dj_database_url.config(
-            default="postgres://bookbuffet_user:0qPJN5DudGY4EHT2LiZq2h9m66bcTVi8@dpg-clktrosjtl8s73f2mo80-a.singapore-postgres.render.com/bookbuffet",
-            conn_max_age=600,
-        )
-    }
+# if PRODUCTION:
+#     DATABASES = {
+#         'default': env.db('DATABASE_URL')
+#     }
+#     DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
