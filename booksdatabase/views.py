@@ -2,7 +2,8 @@ from rest_framework import viewsets, filters, generics
 from .models import Book, Author, Category
 from .serializers import BookSerializer, AuthorSerializer, CategorySerializer, RatingSerializer
 from .permissions import IsAdminOrReadOnly
-from MyBooks.models import Review
+from MyBooks.models import Review, MyBook
+from django.http import JsonResponse
 
 
 class PrefixSearchFilter(filters.SearchFilter):
@@ -115,3 +116,31 @@ class RatingsByBook(generics.ListAPIView):
     def get_queryset(self):
         book_id = self.kwargs["book_id"]
         return Review.objects.filter(book__pk=book_id)
+
+def add_mybook(request):
+    if request.method == "POST":
+        book_id = request.POST.get("book_id")
+        book = Book.objects.get(pk=book_id)
+        mybook, _ = MyBook.objects.get_or_create(user=request.user)
+        mybook.books.add(book)
+        return JsonResponse({"status": True}), 200
+    return JsonResponse({"status": False}), 401
+
+def is_in_mybook(request):
+    if request.method == "POST":
+        book_id = request.POST.get("book_id")
+        book = Book.objects.get(pk=book_id)
+        mybook, _ = MyBook.objects.get_or_create(user=request.user)
+        if book in mybook.books.all():
+            return JsonResponse({"status": True}), 200
+        return JsonResponse({"status": False}), 200
+    return JsonResponse({"status": False}), 401
+
+def remove_mybook(request):
+    if request.method == "POST":
+        book_id = request.POST.get("book_id")
+        book = Book.objects.get(pk=book_id)
+        mybook, _ = MyBook.objects.get_or_create(user=request.user)
+        mybook.books.remove(book)
+        return JsonResponse({"status": True}), 200
+    return JsonResponse({"status": False}), 401
