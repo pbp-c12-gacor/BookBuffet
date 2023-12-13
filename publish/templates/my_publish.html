@@ -18,7 +18,7 @@
                 {% endif %}
                 <div style="text-align: center;">
                     {% csrf_token %}
-                    <button class="delete-button" onclick="confirmDelete('{{ book.id }}')">Delete</button>
+                    <button class="delete-button" style="border-radius: 10px;" onclick="confirmDelete('{{ book.id }}')">Delete</button>
                 </div>
             </div>
             {% endfor %}
