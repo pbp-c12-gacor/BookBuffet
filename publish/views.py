@@ -1,4 +1,5 @@
 import datetime
+import json
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
@@ -124,8 +125,36 @@ def delete_publish_by_id(request, id):
 @csrf_exempt
 def delete_all_publish(request):
     try:
-        # Delete all rows from the "publish" table
         Publish.objects.all().delete()
         return HttpResponse(b"DELETED", status=201)
     except Exception as e:
         return HttpResponse(f"An error occurred: {str(e)}")
+    
+@csrf_exempt
+def create_publish_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+
+        new_publish = Publish.objects.create(
+            user = request.user,
+            title = data["title"],
+            subtitle = data["subtitle"],
+            authors = data["authors"],
+            publisher = data["publisher"],
+            published_date = data["published_date"],
+            description = data["description"],
+            page_count = data["page_count"],
+            categories = data["categories"],
+            language = data["language"],
+            preview_link = data["preview_link"],
+            cover = data["cover"],
+            isbn_10 = data["isbn_10"],
+            isbn_13 = data["isbn_13"],
+        )
+
+        new_publish.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)

@@ -1,7 +1,9 @@
 from rest_framework import viewsets, filters, generics
 from .models import Book, Author, Category
-from .serializers import BookSerializer, AuthorSerializer, CategorySerializer
+from .serializers import BookSerializer, AuthorSerializer, CategorySerializer, RatingSerializer
 from .permissions import IsAdminOrReadOnly
+from MyBooks.models import Review, MyBook
+from django.http import JsonResponse
 
 
 class PrefixSearchFilter(filters.SearchFilter):
@@ -10,7 +12,7 @@ class PrefixSearchFilter(filters.SearchFilter):
         if not search:
             return queryset
         if ":" in search:
-            search_terms = search.split(",")
+            search_terms = search.split(":")
             for term in search_terms:
                 if ":" not in term:
                     queryset = queryset.filter(title__icontains=term)
@@ -96,3 +98,49 @@ class BooksByAuthorAndCategory(generics.ListAPIView):
         author_id = self.kwargs["author_id"]
         category_id = self.kwargs["category_id"]
         return Book.objects.filter(authors__pk=author_id, categories__pk=category_id)
+    
+
+# Make a view to get all reviews of a book
+class RatingsViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = RatingSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+# Make a view to get one review of a book
+class RatingsByBook(generics.ListAPIView):
+    serializer_class = RatingSerializer
+    lookup_field = "pk"
+    lookup_url_kwarg = "book_id"
+
+    def get_queryset(self):
+        book_id = self.kwargs["book_id"]
+        return Review.objects.filter(book__pk=book_id)
+
+def add_mybook(request):
+    if request.method == "POST":
+        book_id = request.POST.get("book_id")
+        book = Book.objects.get(pk=book_id)
+        mybook, _ = MyBook.objects.get_or_create(user=request.user)
+        mybook.books.add(book)
+        return JsonResponse({"status": True}), 200
+    return JsonResponse({"status": False}), 401
+
+def is_in_mybook(request):
+    if request.method == "POST":
+        book_id = request.POST.get("book_id")
+        book = Book.objects.get(pk=book_id)
+        mybook, _ = MyBook.objects.get_or_create(user=request.user)
+        if book in mybook.books.all():
+            return JsonResponse({"status": True}), 200
+        return JsonResponse({"status": False}), 200
+    return JsonResponse({"status": False}), 401
+
+def remove_mybook(request):
+    if request.method == "POST":
+        book_id = request.POST.get("book_id")
+        book = Book.objects.get(pk=book_id)
+        mybook, _ = MyBook.objects.get_or_create(user=request.user)
+        mybook.books.remove(book)
+        return JsonResponse({"status": True}), 200
+    return JsonResponse({"status": False}), 401
