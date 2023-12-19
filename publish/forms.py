@@ -58,7 +58,7 @@ class PublishForm(ModelForm):
 
     preview_link = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': 'Preview Link', 'class': 'custom-width'}),
-        required=False
+        required=True
     )
 
     cover = forms.ImageField(

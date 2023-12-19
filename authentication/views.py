@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.models import User
 
 @csrf_exempt
 def login(request):
@@ -30,6 +31,40 @@ def login(request):
         return JsonResponse({
             "status": False,
             "message": "Login gagal, periksa kembali email atau kata sandi."
+        }, status=401)
+    
+@csrf_exempt
+def register(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    role = request.POST['role']
+    code_referral = request.POST['codeReferral']
+    try :
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({
+                "status": False,
+                "message": "Register gagal, username sudah digunakan."
+            }, status=400)
+        user = User.objects.create_user(username=username, password=password)
+        if role == 'Admin' :
+            if code_referral == 'PBPC12GACORMAXWIN' : 
+                user.is_staff = True
+            else :
+                return JsonResponse({
+                "message": "Sign Up gagal, periksa kembali kode referral."
+                }, status=401)
+        else :
+            user.is_staff = False
+        user.save()
+        return JsonResponse({
+        "username": user.username,
+        "status": True,
+        "message": "Register sukses!"
+    }, status=201)
+    except :
+        return JsonResponse({
+        "status": False,
+        "message": "Sign Up gagal."
         }, status=401)
     
 @csrf_exempt
