@@ -16,7 +16,7 @@ urlpatterns = [
     path("books/isbn/<str:isbn>", BooksByISBN.as_view()),
     path("authors/<int:author_id>/categories/<int:category_id>/books", BooksByAuthorAndCategory.as_view()),
     path("books/<int:book_id>/ratings", RatingsByBook.as_view()),
-    path("auth/addtomybooks/<int:book_id>", add_mybook, name="add_mybook"),
-    path("auth/removemybooks/<int:book_id>", remove_mybook, name="remove_mybook"),
+    path("auth/addtomybooks", add_mybook, name="add_mybook"),
+    path("auth/removemybooks", remove_mybook, name="remove_mybook"),
     path("auth/isinmybooks/<int:book_id>", is_in_mybook, name="is_in_mybook"),
 ]

@@ -5,6 +5,7 @@ from .permissions import IsAdminOrReadOnly
 from MyBooks.models import Review, MyBook
 from django.http import JsonResponse
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
 
 
 class PrefixSearchFilter(filters.SearchFilter):
@@ -122,30 +123,30 @@ class RatingsByBook(generics.ListAPIView):
         book_id = self.kwargs["book_id"]
         return Review.objects.filter(book__pk=book_id)
 
-def add_mybook(request, book_id):
+@csrf_exempt
+def add_mybook(request):
     if request.method == "POST":
         book_id = request.POST.get("book_id")
         book = Book.objects.get(pk=book_id)
         mybook, _ = MyBook.objects.get_or_create(user=request.user)
         mybook.books.add(book)
-        return JsonResponse({"status": True}), 200
-    return JsonResponse({"status": False}), 401
+        return JsonResponse({"status": True}, status=200)
+    return JsonResponse({"status": False}, status=401)
 
 def is_in_mybook(request, book_id):
-    if request.method == "POST":
-        book_id = request.POST.get("book_id")
-        book = Book.objects.get(pk=book_id)
-        mybook, _ = MyBook.objects.get_or_create(user=request.user)
-        if book in mybook.books.all():
-            return JsonResponse({"status": True}), 200
-        return JsonResponse({"status": False}), 200
-    return JsonResponse({"status": False}), 401
+    book = Book.objects.get(pk=book_id)
+    mybook, _ = MyBook.objects.get_or_create(user=request.user)
+    print(book_id)
+    if book in mybook.books.all():
+        return JsonResponse({"status": True}, status=200)
+    return JsonResponse({"status": False}, status=401)
 
-def remove_mybook(request, book_id):
+@csrf_exempt
+def remove_mybook(request):
     if request.method == "POST":
         book_id = request.POST.get("book_id")
         book = Book.objects.get(pk=book_id)
         mybook, _ = MyBook.objects.get_or_create(user=request.user)
         mybook.books.remove(book)
-        return JsonResponse({"status": True}), 200
-    return JsonResponse({"status": False}), 401
+        return JsonResponse({"status": True}, status=200)
+    return JsonResponse({"status": False}, status=401)
