@@ -4,29 +4,33 @@ from .serializers import BookSerializer, AuthorSerializer, CategorySerializer, R
 from .permissions import IsAdminOrReadOnly
 from MyBooks.models import Review, MyBook
 from django.http import JsonResponse
+from django.db.models import Q
 
 
-# class PrefixSearchFilter(filters.SearchFilter):
-#     def filter_queryset(self, request, queryset, view):
-#         search = request.query_params.get("search", None)
-#         if not search:
-#             return queryset
-#         if ":" in search:
-#             search_terms = search.split(":")
-#             for term in search_terms:
-#                 if ":" not in term:
-#                     queryset = queryset.filter(title__icontains=term)
-#                 prefix, value = term.split(":")
-#                 value = value.strip()
-#                 if prefix == "title":
-#                     queryset = queryset.filter(title__icontains=value)
-#                 elif prefix == "author":
-#                     queryset = queryset.filter(authors__name__icontains=value)
-#                 elif prefix == "category":
-#                     queryset = queryset.filter(categories__name__icontains=value)
-#         else:
-#             queryset = queryset.filter(title__icontains=search) | queryset.filter(authors__name__icontains=search)
-#         return queryset
+class PrefixSearchFilter(filters.SearchFilter):
+    def filter_queryset(self, request, queryset, view):
+        search = request.query_params.get("search", None)
+        if not search:
+            return queryset
+        conditions = Q()
+        if ":" in search or "&" in search:
+            print(search)
+            search_terms = search.split("&")
+            for term in search_terms:
+                if ":" not in term:
+                    conditions |= Q(title__icontains=term) | Q(authors__name__icontains=term)
+                    continue
+                prefix, value = term.split(":")
+                value = value.strip()
+                if prefix == "title":
+                    conditions |= Q(title__icontains=value)
+                elif prefix == "author":
+                    conditions |= Q(authors__name__icontains=value)
+                elif prefix == "category":
+                    conditions |= Q(categories__name__icontains=value)
+        else:
+            conditions |= Q(title__icontains=search) | Q(authors__name__icontains=search)
+        return queryset.filter(conditions)
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -55,8 +59,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class BookList(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    # filter_backends = [PrefixSearchFilter]
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [PrefixSearchFilter]
+    # filter_backends = [filters.SearchFilter]
     search_fields = ["title", "authors__name", "categories__name"]
 
 
