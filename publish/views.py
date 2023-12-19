@@ -1,3 +1,4 @@
+import base64
 import datetime
 import json
 from django.shortcuts import get_object_or_404, render
@@ -14,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import PublishForm
 from django.contrib.auth.decorators import user_passes_test
 from django.http import JsonResponse
+from django.core.files.base import ContentFile
 
 @login_required(login_url='/login')
 @csrf_exempt
@@ -98,9 +100,9 @@ def confirming_publish(request, id):
             return JsonResponse({'message': 'Book rejected successfully'})
 
 
-def get_publish_by_id(request, publish_id):
-    publish = Publish.objects.get(pk=publish_id)
-    return HttpResponse(serializers.serialize("json", publish), content_type="application/json")
+def get_publish_by_id(request, id):
+    publish = Publish.objects.get(pk=id)
+    return HttpResponse(serializers.serialize("json", [publish]), content_type="application/json")
 
 def get_unverified_publish(request):
     publish = Publish.objects.filter(is_verified=False)
@@ -109,6 +111,10 @@ def get_unverified_publish(request):
 def get_publish(request):
     publish = Publish.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', publish), content_type="application/json")
+
+def get_user_is_staff(request):
+    is_staff = request.user.is_staff
+    return JsonResponse({'is_staff': is_staff}, status=200)
 
 def get_user(request, id):
     publish = Publish.objects.get(pk=id)
@@ -135,6 +141,9 @@ def create_publish_flutter(request):
     if request.method == 'POST':
         
         data = json.loads(request.body)
+        image_data = data.get('cover', None)
+        cover = image_data.get('name', None)
+        image_data = base64.b64decode(image_data.get('file', None))
 
         new_publish = Publish.objects.create(
             user = request.user,
@@ -148,13 +157,13 @@ def create_publish_flutter(request):
             categories = data["categories"],
             language = data["language"],
             preview_link = data["preview_link"],
-            cover = data["cover"],
             isbn_10 = data["isbn_10"],
             isbn_13 = data["isbn_13"],
         )
 
-        new_publish.save()
+        new_publish.cover.save(cover, ContentFile(image_data), save=True)
 
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
+    
