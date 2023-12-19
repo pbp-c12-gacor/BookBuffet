@@ -118,7 +118,7 @@ class RatingsByBook(generics.ListAPIView):
         book_id = self.kwargs["book_id"]
         return Review.objects.filter(book__pk=book_id)
 
-def add_mybook(request):
+def add_mybook(request, book_id):
     if request.method == "POST":
         book_id = request.POST.get("book_id")
         book = Book.objects.get(pk=book_id)
@@ -127,7 +127,7 @@ def add_mybook(request):
         return JsonResponse({"status": True}), 200
     return JsonResponse({"status": False}), 401
 
-def is_in_mybook(request):
+def is_in_mybook(request, book_id):
     if request.method == "POST":
         book_id = request.POST.get("book_id")
         book = Book.objects.get(pk=book_id)
@@ -137,7 +137,7 @@ def is_in_mybook(request):
         return JsonResponse({"status": False}), 200
     return JsonResponse({"status": False}), 401
 
-def remove_mybook(request):
+def remove_mybook(request, book_id):
     if request.method == "POST":
         book_id = request.POST.get("book_id")
         book = Book.objects.get(pk=book_id)
