@@ -120,8 +120,7 @@ def show_review(request, book_id):
         'book':book,
         'reviews': review,
         'average': average_rating,
-        
-
+        'mybook' : mybook,
         'review_form' : review_form
 
     }
