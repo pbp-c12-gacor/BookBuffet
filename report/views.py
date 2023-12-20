@@ -93,7 +93,7 @@ def delete_report(request, id):
 def delete_report_flutter(request, id):
     report = Report.objects.get(pk = id)
     report.delete()
-    return HttpResponse({'message': 'Report deleted successfully'}, status=200)
+    return JsonResponse({"status": "success"}, status=200)
     
 def get_user_by_id(request, user_id):
     user = User.objects.filter(id=user_id)
