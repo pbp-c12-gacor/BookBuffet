@@ -8,7 +8,7 @@ app_name = 'publish'
 
 urlpatterns = [
     path('', publish_book, name='publish_book'),
-    path('get-publish/<int:id>', get_publish_by_id, name='get_publish_by_id'),
+    path('get-publish/<int:id>/', get_publish_by_id, name='get_publish_by_id'),
     path('get-publish/', get_publish, name='get_publish'),
     path('verify-publish/', verify_publish, name='verify_publish'),
     path('my-publish/', my_publish, name='my_publish'),
@@ -19,4 +19,5 @@ urlpatterns = [
     path('confirming-publish/<int:id>/', confirming_publish, name='confirming_publish'),
     path('my-publish/delete-publish/<int:id>/', delete_publish_by_id, name='delete_publish_by_id'),
     path('create-publish-flutter/', create_publish_flutter, name='create_publish_flutter'),
+    path('is-staff/', get_user_is_staff, name='get_user_is_staff')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
