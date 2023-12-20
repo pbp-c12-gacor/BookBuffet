@@ -90,6 +90,11 @@ def delete_report(request, id):
     else:
         return HttpResponseRedirect(reverse('report:show_report'))
     
+def delete_report_flutter(request, id):
+    report = Report.objects.get(pk = id)
+    report.delete()
+    return HttpResponse({'message': 'Report deleted successfully'}, status=200)
+    
 def get_user_by_id(request, user_id):
     user = User.objects.filter(id=user_id)
     return HttpResponse(serializers.serialize("json", user), content_type="application/json")
