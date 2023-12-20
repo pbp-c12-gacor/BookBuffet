@@ -157,9 +157,9 @@ def delete_review(request, book_id):
 @csrf_exempt
 def delete_review_flutter(request, book_id):
 
-    review = Review.objects.filter(user=request.user).get(book=book_id)
+    review = Review.objects.filter(user=request.user.pk).get(book=book_id)
     review.delete()
-    return HttpResponse({'message': 'book deleted successfully'}, status=200)
+    return HttpResponse(status=200)
 
 
 @csrf_exempt
@@ -192,6 +192,7 @@ def add_review_flutter(request:HttpRequest, book_id:int):
     return JsonResponse({"status": "error"}, status=401)
     
 @csrf_exempt
+@login_required
 def show_post_json(request):
     my_book, created = MyBook.objects.get_or_create(user=request.user)
     return HttpResponse(serializers.serialize("json", my_book.books.all()), content_type="application/json")
