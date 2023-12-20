@@ -93,11 +93,12 @@ def confirming_publish(request, id):
             publish.is_verified = True
             publish.is_valid = True
             publish.save()
-            return JsonResponse({'message': 'Book published successfully'})
+            return JsonResponse({'message': 'Book published successfully'}, status=200)
         elif verify == 'false':
             publish.is_verified = True
             publish.save()
-            return JsonResponse({'message': 'Book rejected successfully'})
+            return JsonResponse({'message': 'Book rejected successfully'}, status=200)
+    return JsonResponse({"status": "error"}, status=401)
 
 
 def get_publish_by_id(request, id):
@@ -166,4 +167,3 @@ def create_publish_flutter(request):
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
-    
