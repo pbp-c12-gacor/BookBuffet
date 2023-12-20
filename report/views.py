@@ -90,6 +90,7 @@ def delete_report(request, id):
     else:
         return HttpResponseRedirect(reverse('report:show_report'))
     
+@csrf_exempt
 def delete_report_flutter(request, id):
     report = Report.objects.get(pk = id)
     report.delete()
