@@ -65,7 +65,9 @@ def delete_mybook_flutter(request, book_id:int):
         review = None
     book = Book.objects.get(id =  book_id)
     my_book.books.remove(book)
-    return HttpResponse({'message': 'book deleted successfully'}, status=200)
+    # return HttpResponse({'message': 'book deleted successfully'}, status=200)
+    return JsonResponse({"status": "success"}, status=200)
+
     # return HttpResponseNotFound()
 
 
@@ -159,7 +161,8 @@ def delete_review_flutter(request, book_id):
 
     review = Review.objects.filter(user=request.user.pk).get(book=book_id)
     review.delete()
-    return HttpResponse(status=200)
+
+    return JsonResponse({"status": "success"}, status=200)
 
 
 @csrf_exempt
