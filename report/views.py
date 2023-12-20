@@ -12,11 +12,6 @@ from report.forms import ReportForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
-def delete_report_flutter(request, id):
-    report = Report.objects.get(pk = id)
-    report.delete()
-    return JsonResponse({"status": "success"}, status=200)
-
 # Fungsi untuk membuat laporan
 @csrf_exempt
 @login_required(login_url='/login')
@@ -95,6 +90,11 @@ def delete_report(request, id):
     else:
         return HttpResponseRedirect(reverse('report:show_report'))
     
+@csrf_exempt
+def delete_report_flutter(request, id):
+    report = Report.objects.get(pk = id)
+    report.delete()
+    return JsonResponse({"status": "success"}, status=200)
     
 def get_user_by_id(request, user_id):
     user = User.objects.filter(id=user_id)
