@@ -120,7 +120,6 @@ def show_review(request, book_id):
     review = Review.objects.filter(book=book)
     review_form= ReviewForm(request.POST or None)
     average_rating = round(Review.objects.filter(book = book).aggregate(Avg("rating"))["rating__avg"] or 0,2)
-    # average_rating = float (f"{average_rating:, .2f}")
     context = {
         'book':book,
         'reviews': review,
