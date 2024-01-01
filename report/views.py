@@ -16,6 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 @login_required(login_url='/login')
 def create_report(request):
+    user = request.user
+    show_logout = user.is_authenticated 
     if request.method == 'POST':
         form = ReportForm(request.POST)
         if form.is_valid():
@@ -30,7 +32,7 @@ def create_report(request):
     else:
         form = ReportForm()
 
-    return render(request, 'create_report.html', {'form': form})
+    return render(request, 'create_report.html', {'form': form,'show_logout': show_logout  })
 
 @csrf_exempt
 @login_required(login_url='/login')
@@ -66,13 +68,15 @@ def search_books(request):
 def show_report(request):
     user = request.user
     reports = Report.objects.all()
+    show_logout = user.is_authenticated 
     if user.is_staff:
         reports = Report.objects.all()
         context = {
-        'reports' : reports
+        'reports' : reports, 'show_logout': show_logout     
     }
     context = {
-        'reports' : reports
+        'reports' : reports,
+        'show_logout': show_logout 
     }
     return render(request, "show_report.html", context)
 

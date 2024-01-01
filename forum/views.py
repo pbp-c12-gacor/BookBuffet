@@ -23,6 +23,8 @@ def show_forum(request):
     formP = PostForm()
     formPE = PostEditForm()
     request.COOKIES['authenticated'] = request.user.is_authenticated
+    user = request.user
+    show_logout = user.is_authenticated 
     context = {
         'username' : request.user.username,
         'user_id' : request.user.id,
@@ -30,7 +32,9 @@ def show_forum(request):
         'authenticated' : request.COOKIES['authenticated'],
                 'formP' : formP,
         'formP' : formP,
-        'formPE' : formPE
+        'formPE' : formPE,
+        'show_logout': show_logout
+
     }
 
     return render(request, "forum.html", context)
@@ -42,6 +46,8 @@ def show_post(request, post_id):
     formP = PostForm()
     formPE = PostEditForm()
     request.COOKIES['authenticated'] = request.user.is_authenticated
+    user = request.user
+    show_logout = user.is_authenticated 
     context = {
         'username' : request.user.username,
         'user_id' : request.user.id,
@@ -50,11 +56,14 @@ def show_post(request, post_id):
         'formC' : formC,
         'formP' : formP,
         'formCE' : formCE,
-        'formPE' : formPE
+        'formPE' : formPE,
+        'show_logout': show_logout
     }
     return render(request, "detail_post.html", context)
 
 def show_mypost(request):
+    user = request.user
+    show_logout = user.is_authenticated 
     request.COOKIES['authenticated'] = request.user.is_authenticated
     formPE = PostEditForm()
     context = {
@@ -67,7 +76,8 @@ def show_mypost(request):
             'user_id' : request.user.id,
             'posts' : posts,
             'authenticated' : request.COOKIES['authenticated'],
-            'formPE' : formPE
+            'formPE' : formPE,
+            'show_logout': show_logout
         }
     return render(request, "my_post.html", context)
 
@@ -111,6 +121,8 @@ def create_comment(request, post_id):
 @login_required
 @csrf_exempt
 def edit_post(request, post_id):
+    user = request.user
+    show_logout = user.is_authenticated 
     post = get_object_or_404(Post,id=post_id)
     if request.method == "POST":
         form = PostEditForm(request.POST or None, instance=post)
@@ -122,12 +134,14 @@ def edit_post(request, post_id):
         # Populate the form with the existing post instance
         form = PostEditForm(instance=post)
 
-    context = {'form': form}
+    context = {'form': form, 'show_logout': show_logout}
     return render(request, "forum.html", context)
 
 @login_required
 @csrf_exempt
 def edit_comment(request, comment_id):
+    user = request.user
+    show_logout = user.is_authenticated 
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.method == "POST":
         form = CommentEditForm(request.POST or None, instance=comment)
@@ -138,7 +152,7 @@ def edit_comment(request, comment_id):
     else:
         form = PostForm(instance=comment)
 
-    context = {'form': form}
+    context = {'form': form, 'show_logout': show_logout}
     return render(request, "forum.html", context)
 
 def get_post(request):

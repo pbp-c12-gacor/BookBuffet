@@ -14,6 +14,9 @@ from .forms import NewUserForm
 # Create your views here.
 def show_main(request):
     # Get 2 books with the highest average rating
+    user = request.user
+    show_logout = user.is_authenticated 
+    
     all_books = Book.objects.all()
     for book in all_books:
         reviews = Review.objects.filter(book=book)
@@ -30,6 +33,7 @@ def show_main(request):
     context = {
         'top_books': top_books,
         'random_picks': random_picks,
+        'show_logout': show_logout
     }
 
     return render(request, "main.html", context)
