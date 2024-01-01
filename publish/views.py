@@ -21,6 +21,8 @@ from django.core.files.base import ContentFile
 @csrf_exempt
 # Method untuk melakukan pembuatan Publish
 def publish_book(request):
+    user = request.user
+    show_logout = user.is_authenticated
     form = PublishForm()
     if request.method == 'POST':
         form = PublishForm(request.POST, request.FILES)
@@ -28,21 +30,27 @@ def publish_book(request):
             new_publish = form.save(commit=False)
             new_publish.user = request.user
             new_publish.save()
-    return render(request, 'publish_book.html', {'form': form})
+    return render(request, 'publish_book.html', {'form': form, 'show_logout': show_logout})
 
 def verify_publish(request):
+    user = request.user
+    show_logout = user.is_authenticated
     if request.user.is_staff:
         publish_to_verify = Publish.objects.filter(is_verified=False)
-        return render(request, 'verify_publish.html', {'publish_to_verify': publish_to_verify})
-    return render(request, 'not_permitted.html', {})
+        return render(request, 'verify_publish.html', {'publish_to_verify': publish_to_verify,  'show_logout': show_logout})
+    return render(request, 'not_permitted.html', { 'show_logout': show_logout})
 
 @login_required(login_url='/login')
 def my_publish(request):
+    user = request.user
+    show_logout = user.is_authenticated
     publish = Publish.objects.filter(user = request.user)
-    return render(request, 'my_publish.html', {'publish':publish})
+    return render(request, 'my_publish.html', {'publish':publish,  'show_logout': show_logout})
 
 def show_publish_detail(request, id):
     publish = Publish.objects.get(pk=id)
+    user = request.user
+    show_logout = user.is_authenticated 
     context = {
         'title': publish.title,
         'authors': publish.authors,
@@ -57,6 +65,7 @@ def show_publish_detail(request, id):
         'isbn_13': publish.isbn_13 if publish.isbn_13 else "-",
         'submitted_by': publish.user.username,
         'date_added': publish.date_added.strftime('%Y-%m-%d'),
+        'show_logout': show_logout
     }
     return render(request, 'verify_book.html', context)
 

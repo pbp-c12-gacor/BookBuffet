@@ -16,8 +16,10 @@ from django.db.models import Avg
 def show_my_books(request: HttpRequest) -> HttpResponse:
     books = Book.objects.all()
     mybookForm = MyBookForm(request.POST or None)
-    
-    return render(request, "mybooks.html", {"posts": books, 'mybookForm' : mybookForm })
+    user = request.user
+    show_logout = user.is_authenticated 
+
+    return render(request, "mybooks.html", {"posts": books, 'mybookForm' : mybookForm,'show_logout': show_logout })
 
 
 
@@ -114,17 +116,18 @@ def show_review(request, book_id):
         mybook = MyBook.objects.filter(user=user).get(books=book)
     except:
         mybook = "kosong"
-
+    show_logout = user.is_authenticated 
     review = Review.objects.filter(book=book)
     review_form= ReviewForm(request.POST or None)
-    average_rating = Review.objects.filter(book = book).aggregate(Avg("rating"))["rating__avg"] or 0
+    average_rating = round(Review.objects.filter(book = book).aggregate(Avg("rating"))["rating__avg"] or 0,2)
+    # average_rating = float (f"{average_rating:, .2f}")
     context = {
         'book':book,
         'reviews': review,
         'average': average_rating,
         'mybook' : mybook,
-        'review_form' : review_form
-
+        'review_form' : review_form,
+        'show_logout': show_logout
     }
 
     return render(request, "review.html", context)
