@@ -16,7 +16,7 @@ def show_catalog(request):
         if len(reviews) == 0:
             book.average_rating = 0
         else:
-            book.average_rating = sum([review.rating for review in reviews]) / len(reviews)
+            book.average_rating = round(sum([review.rating for review in reviews]) / len(reviews),2)
     all_books = sorted(all_books, key=lambda book: book.average_rating, reverse=True)
     
     categories = Category.objects.all()
