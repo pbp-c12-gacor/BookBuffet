@@ -24,6 +24,7 @@ def show_my_books(request: HttpRequest) -> HttpResponse:
 
 
 @csrf_exempt
+@login_required(login_url='/login')
 def add_my_books(request: HttpRequest, book_id:int):
     book = Book.objects.get(id= book_id)
     my_book, created = MyBook.objects.get_or_create(user=request.user)
@@ -38,6 +39,7 @@ def get_mybooks_json(request):
     return HttpResponse(serializers.serialize('json', my_book.books.all()))
 
 @csrf_exempt
+@login_required(login_url='/login')
 def remove_from_cart(request):
     if request.method == 'DELETE':
         book_id = json.loads(request.body).get('id')
@@ -74,6 +76,7 @@ def delete_mybook_flutter(request, book_id:int):
 
 
 @csrf_exempt
+@login_required(login_url='/login')
 def add_review(request:HttpRequest, book_id:int):
     if request.method == 'POST':
         rating = request.POST.get("rating")
